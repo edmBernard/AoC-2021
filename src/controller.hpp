@@ -7,7 +7,10 @@
 
 #include <functional>
 #include <string>
+#include <vector>
+#include <tuple>
 #include <filesystem>
+
 
 namespace aoc {
 
@@ -15,7 +18,8 @@ namespace fs = std::filesystem;
 
 
 using CommandFunction = std::function<std::tuple<size_t, size_t>(fs::path)>;
-using CommandRegister = std::vector<std::tuple<std::string, fs::path, CommandFunction>>;
+using ExpectedResults = std::vector<std::tuple<fs::path, size_t, size_t>>;
+using CommandRegister = std::vector<std::tuple<std::string, ExpectedResults, CommandFunction>>;
 
 class Controller {
 public:
@@ -30,18 +34,34 @@ public:
     }
 
     const bool isDirectory = fs::is_directory(input);
-    for (auto &[name, defaultFilename, command] : commands) {
+    for (auto &[name, expectedResults, command] : commands) {
       if (!matcher(name, filter)) {
         continue;
       }
-      fs::path finalInputPath = isDirectory ? input / defaultFilename : input;
 
-      auto start_temp = std::chrono::high_resolution_clock::now();
+      for (auto& [filename, expectedPart1, expectedPart2] : expectedResults) {
 
-      auto [part1, part2] = command(finalInputPath);
+        fs::path finalInputPath = isDirectory ? input / filename : input;
 
-      std::chrono::duration<double, std::milli> elapsed_temp = std::chrono::high_resolution_clock::now() - start_temp;                                                                           \
-      spdlog::info("{: <10} in {:>7.2f} ms : part1={:<40} part2={:<40}", name, elapsed_temp.count(), part1, part2);
+        auto start_temp = std::chrono::high_resolution_clock::now();
+
+        auto [part1, part2] = command(finalInputPath);
+
+        std::chrono::duration<double, std::milli> elapsed_temp = std::chrono::high_resolution_clock::now() - start_temp;                                                                           \
+        spdlog::info("{: <10} in {:>7.2f} ms : part1={:<40} part2={:<40}", name, elapsed_temp.count(), part1, part2);
+
+        if (!isDirectory) {
+          // if we pass a filename we probably don't want to compare with expected
+          break;
+        }
+
+        if (part1 != expectedPart1) {
+          spdlog::error("Result Part1 missmatch : expected={:<40}  got={:<40}", expectedPart1, part1);
+        }
+        if (part2 != expectedPart2) {
+          spdlog::error("Result Part1 missmatch : expected={:<40}  got={:<40}", expectedPart1, part1);
+        }
+      }
     }
   }
 
@@ -64,8 +84,8 @@ private:
 
 class RegisterCommand {
 public:
-  RegisterCommand(const std::string &name, fs::path defaultFilename, CommandFunction command) {
-    Controller::GetCommandRegister().push_back({name, defaultFilename, command});
+  RegisterCommand(const std::string &name, ExpectedResults expectedResults, CommandFunction command) {
+    Controller::GetCommandRegister().push_back({name, expectedResults, command});
   }
 };
 
