@@ -1,6 +1,8 @@
 
 #pragma once
 
+#include <spdlog/spdlog.h>
+
 #include <string>
 #include <string_view>
 #include <vector>
@@ -53,10 +55,18 @@ inline bool matcher(std::string_view name, std::string_view filter) {
   if (filter.empty()) {
     return true;
   }
-  if (filter[0] == '!') {
-    return name.find(filter.data() + 1) == std::string::npos;
+  const bool negative = filter[0] == '!';
+  const size_t offset = negative ? 1 : 0;
+
+  bool doesMatch = false;
+  for (auto& tag : utils::split(std::string(name), ',')) {
+    spdlog::debug("name : {} processed tag : {}", name, tag);
+
+    if (name.find(filter.data() + offset) != std::string::npos) {
+      doesMatch = true;
+    }
   }
-  return name.find(filter) != std::string::npos;
+  return negative ? !doesMatch : doesMatch;
 }
 
 } // namespace aoc
