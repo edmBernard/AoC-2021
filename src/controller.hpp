@@ -14,7 +14,8 @@ namespace aoc {
 namespace fs = std::filesystem;
 
 
-using CommandFunction = std::function<std::tuple<long, long>(fs::path)>;
+using CommandFunction = std::function<std::tuple<size_t, size_t>(fs::path)>;
+using CommandRegister = std::vector<std::tuple<std::string, fs::path, CommandFunction>>;
 
 class Controller {
 public:
@@ -51,13 +52,13 @@ public:
     }
   }
 
-  static std::vector<std::tuple<std::string, fs::path, CommandFunction>> &GetCommandRegister() {
-    static std::vector<std::tuple<std::string, fs::path, CommandFunction>> g_command;
+  static CommandRegister &GetCommandRegister() {
+    static CommandRegister g_command;
     return g_command;
   }
 
 private:
-  const std::vector<std::tuple<std::string, fs::path, CommandFunction>> commands;
+  const CommandRegister commands;
   const std::string filter;
 };
 

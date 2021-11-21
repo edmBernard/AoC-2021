@@ -8,7 +8,7 @@ namespace aoc {
 
 namespace fs = std::filesystem;
 
-RegisterCommand day02("day02", "day02.txt", [](fs::path filename) -> std::tuple<long, long> {
+RegisterCommand day02("day02", "day02.txt", [](fs::path filename) -> std::tuple<size_t, size_t> {
   spdlog::debug("filename: {}", filename.string());
   return {1, 2};
 });
