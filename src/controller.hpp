@@ -33,12 +33,14 @@ public:
       if (!matcher(name, filter)) {
         continue;
       }
-      if (isDirectory) {
-        command(input / defaultFilename);
-      } else {
-        command(input);
-      }
-      spdlog::info("{}", name);
+      fs::path finalInputPath = isDirectory ? input / defaultFilename : input;
+
+      auto start_temp = std::chrono::high_resolution_clock::now();
+
+      command(finalInputPath);
+
+      std::chrono::duration<double, std::milli> elapsed_temp = std::chrono::high_resolution_clock::now() - start_temp;                                                                           \
+      spdlog::info("{: <5} : {:.2f} ms", name, elapsed_temp.count());
     }
   }
 
