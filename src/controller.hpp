@@ -14,7 +14,7 @@ namespace aoc {
 namespace fs = std::filesystem;
 
 
-using CommandFunction = std::function<long(fs::path)>;
+using CommandFunction = std::function<std::tuple<long, long>(fs::path)>;
 
 class Controller {
 public:
@@ -37,10 +37,10 @@ public:
 
       auto start_temp = std::chrono::high_resolution_clock::now();
 
-      command(finalInputPath);
+      auto [part1, part2] = command(finalInputPath);
 
       std::chrono::duration<double, std::milli> elapsed_temp = std::chrono::high_resolution_clock::now() - start_temp;                                                                           \
-      spdlog::info("{: <5} : {:.2f} ms", name, elapsed_temp.count());
+      spdlog::info("{: <10} in {:>7.2f} ms : part1={:<40} part2={:<40}", name, elapsed_temp.count(), part1, part2);
     }
   }
 
