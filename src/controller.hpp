@@ -47,7 +47,7 @@ public:
         auto [part1, part2] = command(finalInputPath);
 
         std::chrono::duration<double, std::milli> elapsed_temp = std::chrono::high_resolution_clock::now() - start_temp;                                                                           \
-        spdlog::info("{: <10} in {:>7.2f} ms : part1={:<40} part2={:<40}", name, elapsed_temp.count(), part1, part2);
+        spdlog::info("{: <10} in {:>7.2f} ms : part1={:<10} part2={:<10}", name, elapsed_temp.count(), part1, part2);
 
         if (!isDirectory) {
           // if we pass a filename we probably don't want to compare with expected
@@ -55,10 +55,10 @@ public:
         }
 
         if (part1 != expectedPart1) {
-          spdlog::error("Result Part1 missmatch : expected={:<40}  got={:<40}", expectedPart1, part1);
+          spdlog::error("Result Part1 missmatch : expected={:<10}  got={:<10}", expectedPart1, part1);
         }
         if (part2 != expectedPart2) {
-          spdlog::error("Result Part2 missmatch : expected={:<40}  got={:<40}", expectedPart1, part1);
+          spdlog::error("Result Part2 missmatch : expected={:<10}  got={:<10}", expectedPart2, part2);
         }
       }
     }
