@@ -37,22 +37,27 @@ public:
       if (!matcher(name, filter)) {
         continue;
       }
+      if (expectedResults.empty() && isDirectory) {
+        continue;
+      }
 
-      for (auto& [filename, expectedPart1, expectedPart2] : expectedResults) {
-
-        fs::path finalInputPath = isDirectory ? input / filename : input;
-
+      if (expectedResults.empty() || !isDirectory) {
         auto start_temp = std::chrono::high_resolution_clock::now();
 
-        auto [part1, part2] = command(finalInputPath);
+        auto [part1, part2] = command(input);
 
         std::chrono::duration<double, std::milli> elapsed_temp = std::chrono::high_resolution_clock::now() - start_temp;                                                                           \
         spdlog::info("{: <10} in {:>7.2f} ms : part1={:<10} part2={:<10}", name, elapsed_temp.count(), part1, part2);
+        continue;
+      }
 
-        if (!isDirectory) {
-          // if we pass a filename we probably don't want to compare with expected
-          break;
-        }
+      for (auto& [filename, expectedPart1, expectedPart2] : expectedResults) {
+        auto start_temp = std::chrono::high_resolution_clock::now();
+
+        auto [part1, part2] = command(input / filename);
+
+        std::chrono::duration<double, std::milli> elapsed_temp = std::chrono::high_resolution_clock::now() - start_temp;                                                                           \
+        spdlog::info("{: <10} in {:>7.2f} ms : part1={:<10} part2={:<10}", name, elapsed_temp.count(), part1, part2);
 
         if (part1 != expectedPart1) {
           spdlog::error("Result Part1 missmatch : expected={:<10}  got={:<10}", expectedPart1, part1);
