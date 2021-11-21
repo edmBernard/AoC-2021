@@ -21,11 +21,11 @@ inline std::string join(const std::vector<std::string> &tokens, const std::strin
   return stream.str();
 }
 
-inline std::vector<std::string> split(std::string const &original, char separator) {
+inline std::vector<std::string> split(const std::string &original, char separator) {
   std::vector<std::string> results;
-  std::string::const_iterator start = original.begin();
-  std::string::const_iterator end = original.end();
-  std::string::const_iterator next = std::find(start, end, separator);
+  auto start = original.begin();
+  auto end = original.end();
+  auto next = std::find(start, end, separator);
 
   while (next != end) {
     results.push_back(std::string(start, next));
@@ -58,14 +58,7 @@ inline bool matcher(std::string_view name, std::string_view filter) {
   const bool negative = filter[0] == '!';
   const size_t offset = negative ? 1 : 0;
 
-  bool doesMatch = false;
-  for (auto& tag : utils::split(std::string(name), ',')) {
-    spdlog::debug("name : {} processed tag : {}", name, tag);
-
-    if (tag.find(filter.data() + offset) != std::string::npos) {
-      doesMatch = true;
-    }
-  }
+  const bool doesMatch = name.find(filter.data() + offset) != std::string::npos;
   return negative ? !doesMatch : doesMatch;
 }
 

@@ -16,7 +16,6 @@ namespace aoc {
 
 namespace fs = std::filesystem;
 
-
 using CommandFunction = std::function<std::tuple<size_t, size_t>(fs::path)>;
 using ExpectedResults = std::vector<std::tuple<fs::path, size_t, size_t>>;
 using CommandRegister = std::vector<std::tuple<std::string, ExpectedResults, CommandFunction>>;
@@ -59,7 +58,7 @@ public:
           spdlog::error("Result Part1 missmatch : expected={:<40}  got={:<40}", expectedPart1, part1);
         }
         if (part2 != expectedPart2) {
-          spdlog::error("Result Part1 missmatch : expected={:<40}  got={:<40}", expectedPart1, part1);
+          spdlog::error("Result Part2 missmatch : expected={:<40}  got={:<40}", expectedPart1, part1);
         }
       }
     }
