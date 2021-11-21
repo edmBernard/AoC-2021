@@ -7,10 +7,14 @@
 
 #include <functional>
 #include <string>
+#include <filesystem>
 
 namespace aoc {
 
-using CommandFunction = std::function<int(int, int)>;
+namespace fs = std::filesystem;
+
+
+using CommandFunction = std::function<int(int, int, fs::path, fs::path)>;
 
 class Controller {
 public:
@@ -19,10 +23,15 @@ public:
     spdlog::debug("Number of command registered : {}", commands.size());
   }
 
-  void run() {
-    for (auto &[name, command] : commands) {
+  void run(fs::path directory, fs::path filename) {
+    for (auto &[name, defaultFilename, command] : commands) {
       if (!matcher(name, filter)) {
         continue;
+      }
+      if (filename.empty()) {
+        command(1, 2, directory, defaultFilename);
+      } else {
+        command(1, 2, directory, filename);
       }
       spdlog::info("{}", name);
     }
@@ -30,25 +39,25 @@ public:
 
   void show() {
 
-    for (auto &[name, command] : commands) {
+    for (auto &[name, defaultFilename, command] : commands) {
       spdlog::info("{}", name);
     }
   }
 
-  static std::vector<std::tuple<std::string, CommandFunction>> &GetCommandRegister() {
-    static std::vector<std::tuple<std::string, CommandFunction>> g_command;
+  static std::vector<std::tuple<std::string, fs::path, CommandFunction>> &GetCommandRegister() {
+    static std::vector<std::tuple<std::string, fs::path, CommandFunction>> g_command;
     return g_command;
   }
 
 private:
-  const std::vector<std::tuple<std::string, CommandFunction>> commands;
+  const std::vector<std::tuple<std::string, fs::path, CommandFunction>> commands;
   const std::string filter;
 };
 
 class RegisterCommand {
 public:
-  RegisterCommand(const std::string &name, CommandFunction command) {
-    Controller::GetCommandRegister().push_back({name, command});
+  RegisterCommand(const std::string &name, fs::path defaultFilename, CommandFunction command) {
+    Controller::GetCommandRegister().push_back({name, defaultFilename, command});
   }
 };
 
