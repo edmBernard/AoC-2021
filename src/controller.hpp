@@ -14,7 +14,7 @@ namespace aoc {
 namespace fs = std::filesystem;
 
 
-using CommandFunction = std::function<int(int, int, fs::path, fs::path)>;
+using CommandFunction = std::function<long(fs::path)>;
 
 class Controller {
 public:
@@ -23,15 +23,20 @@ public:
     spdlog::debug("Number of command registered : {}", commands.size());
   }
 
-  void run(fs::path directory, fs::path filename) {
+  void run(fs::path input) {
+    if (!fs::exists(input)) {
+      throw std::runtime_error(fmt::format("Input path does not exists : {}", fs::absolute(input).string()));
+    }
+
+    const bool isDirectory = fs::is_directory(input);
     for (auto &[name, defaultFilename, command] : commands) {
       if (!matcher(name, filter)) {
         continue;
       }
-      if (filename.empty()) {
-        command(1, 2, directory, defaultFilename);
+      if (isDirectory) {
+        command(input / defaultFilename);
       } else {
-        command(1, 2, directory, filename);
+        command(input);
       }
       spdlog::info("{}", name);
     }

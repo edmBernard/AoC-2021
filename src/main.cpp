@@ -18,8 +18,7 @@ int main(int argc, char *argv[]) try {
   // clang-format off
   options.add_options()
     ("filter", "Filter to select command", cxxopts::value<std::string>()->default_value(""), "FILTER")
-    ("d,directory", "Directory that contain input files", cxxopts::value<std::string>(), "directory")
-    ("f,filename", "Input filename", cxxopts::value<std::string>()->default_value(""), "filename")
+    ("i,input", "Filename or directory containing input files", cxxopts::value<std::string>(), "input")
     ("h,help", "Print help")
     ;
   // clang-format on
@@ -31,16 +30,15 @@ int main(int argc, char *argv[]) try {
     return EXIT_SUCCESS;
   }
 
-  if (!cli.count("directory")) {
-    spdlog::error("Missing directory");
+  if (!cli.count("input")) {
+    spdlog::error("Missing input parameter");
     return EXIT_FAILURE;
   }
 
   // =================================================================================================
   // Code
   aoc::Controller engine(cli["filter"].as<std::string>());
-  engine.run(cli["directory"].as<std::string>(), cli["filename"].as<std::string>());
-  // engine.show();
+  engine.run(cli["input"].as<std::string>());
 
   return EXIT_SUCCESS;
 
