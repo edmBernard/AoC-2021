@@ -5,12 +5,11 @@
 
 #include <spdlog/spdlog.h>
 
+#include <filesystem>
 #include <functional>
 #include <string>
-#include <vector>
 #include <tuple>
-#include <filesystem>
-
+#include <vector>
 
 namespace aoc {
 
@@ -46,17 +45,17 @@ public:
 
         auto [part1, part2] = command(input);
 
-        std::chrono::duration<double, std::milli> elapsed_temp = std::chrono::high_resolution_clock::now() - start_temp;                                                                           \
+        std::chrono::duration<double, std::milli> elapsed_temp = std::chrono::high_resolution_clock::now() - start_temp;
         spdlog::info("{: <10} in {:>7.2f} ms : part1={:<10} part2={:<10}", name, elapsed_temp.count(), part1, part2);
         continue;
       }
 
-      for (auto& [filename, expectedPart1, expectedPart2] : expectedResults) {
+      for (auto &[filename, expectedPart1, expectedPart2] : expectedResults) {
         auto start_temp = std::chrono::high_resolution_clock::now();
 
         auto [part1, part2] = command(input / filename);
 
-        std::chrono::duration<double, std::milli> elapsed_temp = std::chrono::high_resolution_clock::now() - start_temp;                                                                           \
+        std::chrono::duration<double, std::milli> elapsed_temp = std::chrono::high_resolution_clock::now() - start_temp;
         spdlog::info("{: <10} in {:>7.2f} ms : part1={:<10} part2={:<10}", name, elapsed_temp.count(), part1, part2);
 
         if (part1 != expectedPart1) {

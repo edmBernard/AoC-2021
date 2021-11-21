@@ -3,11 +3,11 @@
 
 #include <spdlog/spdlog.h>
 
+#include <algorithm>
+#include <sstream>
 #include <string>
 #include <string_view>
 #include <vector>
-#include <sstream>
-#include <algorithm>
 
 namespace aoc {
 
@@ -49,7 +49,9 @@ inline bool match(std::string_view name, std::string_view filter) {
   }
   return true;
 }
+
 } // namespace utils
+
 inline bool matcher(std::string_view name, std::string_view filter) {
 
   if (filter.empty()) {

@@ -1,10 +1,10 @@
 #include <controller.hpp>
 
 #include <cxxopts.hpp>
-#include <fmt/core.h>
 #include <fmt/color.h>
-#include <spdlog/spdlog.h>
+#include <fmt/core.h>
 #include <spdlog/cfg/env.h>
+#include <spdlog/spdlog.h>
 
 int main(int argc, char *argv[]) try {
 
@@ -49,5 +49,4 @@ int main(int argc, char *argv[]) try {
 } catch (const std::exception &e) {
   spdlog::error("{}", e.what());
   return EXIT_FAILURE;
-
 }
