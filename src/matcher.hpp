@@ -62,7 +62,7 @@ inline bool matcher(std::string_view name, std::string_view filter) {
   for (auto& tag : utils::split(std::string(name), ',')) {
     spdlog::debug("name : {} processed tag : {}", name, tag);
 
-    if (name.find(filter.data() + offset) != std::string::npos) {
+    if (tag.find(filter.data() + offset) != std::string::npos) {
       doesMatch = true;
     }
   }
