@@ -50,7 +50,13 @@ inline bool match(std::string_view name, std::string_view filter) {
 } // namespace utils
 inline bool matcher(std::string_view name, std::string_view filter) {
 
-  return utils::match(name, filter);
+  if (filter.empty()) {
+    return true;
+  }
+  if (filter[0] == '!') {
+    return name.find(filter.data() + 1) == std::string::npos;
+  }
+  return name.find(filter) != std::string::npos;
 }
 
 } // namespace aoc
