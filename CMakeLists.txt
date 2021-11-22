@@ -40,8 +40,10 @@ SET(SOURCES
   ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp
 )
 
-message("commands ${COMMANDS} ")
+include_directories(${CMAKE_BINARY_DIR}/rust_part)
+add_subdirectory(rust_part)
+
 #**************************************************************************************************
 # Make configuration ******************************************************************************
 add_executable(AoC-2021 ${COMMANDS} ${SOURCES})
-target_link_libraries(AoC-2021 PRIVATE fmt::fmt-header-only spdlog::spdlog_header_only cxxopts::cxxopts)
+target_link_libraries(AoC-2021 PRIVATE fmt::fmt-header-only spdlog::spdlog_header_only cxxopts::cxxopts rust_part)
