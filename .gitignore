@@ -3,6 +3,7 @@
 
 # input files
 *.txt
+!CMakeLists.txt
 
 # Todo list
 TODO
