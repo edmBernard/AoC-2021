@@ -15,14 +15,19 @@ else()
   set(TARGET_DIR $<IF:$<OR:$<CONFIG:Debug>,$<CONFIG:>>,debug,release>)
 endif()
 
-message("CMAKE_BUILD_TYPE" ${CMAKE_BUILD_TYPE})
-message("CMAKE_CONFIGURATION_TYPES" ${CMAKE_CONFIGURATION_TYPES})
+if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
+  set(LIBRARY_EXTENSION "lib")
+  set(LIBRARY_PREFIX "")
+else()
+  set(LIBRARY_EXTENSION "a")
+  set(LIBRARY_PREFIX "lib")
+endif()
 
 # the rust lib that only contain rust code
-set(RUST_LIB "${CMAKE_CURRENT_BINARY_DIR}/${TARGET_DIR}/aoc_rust.lib")
+set(RUST_LIB "${CMAKE_CURRENT_BINARY_DIR}/${TARGET_DIR}/${LIBRARY_PREFIX}aoc_rust.${LIBRARY_EXTENSION}")
 
 add_custom_command(
-  OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/aoc_rust.cpp
+  OUTPUT ${RUST_LIB} ${CMAKE_CURRENT_BINARY_DIR}/aoc_rust.cpp
   COMMAND ${CARGO_CMD} --target-dir=${CMAKE_CURRENT_BINARY_DIR}
   COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/cxxbridge/aoc_rust/src/lib.rs.cc ${CMAKE_CURRENT_BINARY_DIR}/aoc_rust.cpp
   COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/cxxbridge/aoc_rust/src/lib.rs.h ${CMAKE_CURRENT_BINARY_DIR}/aoc_rust.h
@@ -38,7 +43,7 @@ if (MSVC)
   # it seem msvcrt don't need the debug version even in debug
   # set(EXTRA_LINK_LIBRARY userenv advapi32 ws2_32 shell32 $<IF:$<OR:$<CONFIG:Debug>,$<CONFIG:>>,msvcrtd,msvcrt>)
 else()
-  set(EXTRA_LINK_LIBRARY pthread m dl)
+  set(EXTRA_LINK_LIBRARY -Wl,--no-as-needed pthread m dl)
 endif()
 
 target_link_libraries(aoc_rust_cxx ${EXTRA_LINK_LIBRARY} ${RUST_LIB})
