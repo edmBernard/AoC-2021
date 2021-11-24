@@ -18,17 +18,17 @@ endif()
 message("CMAKE_BUILD_TYPE" ${CMAKE_BUILD_TYPE})
 message("CMAKE_CONFIGURATION_TYPES" ${CMAKE_CONFIGURATION_TYPES})
 
-set(RUST_LIB "${CMAKE_CURRENT_BINARY_DIR}/${TARGET_DIR}/rust_part.lib")
+set(RUST_LIB "${CMAKE_CURRENT_BINARY_DIR}/${TARGET_DIR}/aoc_rust.lib")
 
 add_custom_command(
-  OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/rust_part.cpp
+  OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/aoc_rust.cpp
   COMMAND ${CARGO_CMD} --target-dir=${CMAKE_CURRENT_BINARY_DIR}
-  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/cxxbridge/rust_part/src/lib.rs.cc ${CMAKE_CURRENT_BINARY_DIR}/rust_part.cpp
-  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/cxxbridge/rust_part/src/lib.rs.h ${CMAKE_CURRENT_BINARY_DIR}/rust_part.h
+  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/cxxbridge/aoc_rust/src/lib.rs.cc ${CMAKE_CURRENT_BINARY_DIR}/aoc_rust.cpp
+  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/cxxbridge/aoc_rust/src/lib.rs.h ${CMAKE_CURRENT_BINARY_DIR}/aoc_rust.h
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-add_library(rust_part_cxx STATIC ${CMAKE_CURRENT_BINARY_DIR}/rust_part.cpp)
+add_library(aoc_rust_cxx STATIC ${CMAKE_CURRENT_BINARY_DIR}/aoc_rust.cpp)
 
 if (MSVC)
   # Library for rustup : https://github.com/rust-lang/rustup/pull/1468
@@ -39,9 +39,11 @@ else()
   set(EXTRA_LINK_LIBRARY pthread m dl)
 endif()
 
-target_link_libraries(rust_part_cxx ${EXTRA_LINK_LIBRARY} ${RUST_LIB})
-target_include_directories(rust_part_cxx PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
+target_link_libraries(aoc_rust_cxx ${EXTRA_LINK_LIBRARY} ${RUST_LIB})
+target_include_directories(aoc_rust_cxx PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
 
-add_test(NAME rust_part_test
+add_test(NAME aoc_rust_test
     COMMAND cargo test
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+
+add_library(aoc::rust ALIAS aoc_rust_cxx)

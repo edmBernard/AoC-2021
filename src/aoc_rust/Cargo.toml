@@ -1,5 +1,5 @@
 [package]
-name = "rust_part"
+name = "aoc_rust"
 version = "0.1.0"
 authors = ["edmbernard <bernard.erwan@gmail.com>"]
 edition = "2018"
