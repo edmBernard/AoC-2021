@@ -29,7 +29,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
-  add_compile_options(/Oy /utf-8 /Zc:__cplusplus /DUNICODE /D_UNICODE /arch:AVX2)
+  add_compile_options(/Oy /utf-8 /Zc:__cplusplus /DUNICODE /D_UNICODE /arch:AVX2 /MD)
 else()
   add_compile_options(-fPIC -O3 -march=avx2)
 endif()
