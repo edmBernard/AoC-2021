@@ -11,6 +11,8 @@ find_package(cxxopts REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
 find_package(fmt CONFIG REQUIRED)
 
+find_package(xsimd CONFIG REQUIRED)
+
 #**************************************************************************************************
 # Include *****************************************************************************************
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
@@ -27,9 +29,9 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
-  add_compile_options(/Oy /utf-8 /Zc:__cplusplus /DUNICODE /D_UNICODE)
+  add_compile_options(/Oy /utf-8 /Zc:__cplusplus /DUNICODE /D_UNICODE /arch:AVX2)
 else()
-  add_compile_options(-fPIC -O3)
+  add_compile_options(-fPIC -O3 -march=avx2)
 endif()
 
 #**************************************************************************************************
@@ -46,4 +48,4 @@ add_subdirectory(rust_part)
 #**************************************************************************************************
 # Make configuration ******************************************************************************
 add_executable(AoC-2021 ${COMMANDS} ${SOURCES})
-target_link_libraries(AoC-2021 PRIVATE fmt::fmt-header-only spdlog::spdlog_header_only cxxopts::cxxopts rust_part)
+target_link_libraries(AoC-2021 PRIVATE fmt::fmt-header-only spdlog::spdlog_header_only cxxopts::cxxopts rust_part xsimd)
