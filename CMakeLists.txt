@@ -36,16 +36,15 @@ endif()
 
 #**************************************************************************************************
 # Set variable ************************************************************************************
-file(GLOB COMMANDS ${CMAKE_CURRENT_SOURCE_DIR}/src/commands/*.cpp)
+file(GLOB COMMANDS_FILE ${CMAKE_CURRENT_SOURCE_DIR}/src/commands/*.cpp)
 
 SET(SOURCES
   ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp
 )
 
-include_directories(${CMAKE_BINARY_DIR}/rust_part)
 add_subdirectory(rust_part)
 
 #**************************************************************************************************
 # Make configuration ******************************************************************************
-add_executable(AoC-2021 ${COMMANDS} ${SOURCES})
-target_link_libraries(AoC-2021 PRIVATE fmt::fmt-header-only spdlog::spdlog_header_only cxxopts::cxxopts rust_part xsimd)
+add_executable(AoC-2021 ${COMMANDS_FILE} ${SOURCES})
+target_link_libraries(AoC-2021 PRIVATE fmt::fmt-header-only spdlog::spdlog_header_only cxxopts::cxxopts rust_part_cxx xsimd)

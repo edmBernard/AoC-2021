@@ -1,3 +1,5 @@
+// use cxx::CxxString;
+
 #[cxx::bridge]
 mod ffi {
   extern "Rust" {
@@ -7,5 +9,6 @@ mod ffi {
 }
 
 pub fn addition(a: u16, b: u16) -> u16 {
+  println!("Message from rust");
   a + b
 }
