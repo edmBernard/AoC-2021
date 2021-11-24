@@ -33,6 +33,7 @@ add_library(rust_part_cxx STATIC ${CMAKE_CURRENT_BINARY_DIR}/rust_part.cpp)
 if (MSVC)
   # Library for rustup : https://github.com/rust-lang/rustup/pull/1468
   set(EXTRA_LINK_LIBRARY userenv advapi32 ws2_32 shell32 msvcrt)
+  # it seem msvcrt don't need the debug version even in debug
   # set(EXTRA_LINK_LIBRARY userenv advapi32 ws2_32 shell32 $<IF:$<OR:$<CONFIG:Debug>,$<CONFIG:>>,msvcrtd,msvcrt>)
 else()
   set(EXTRA_LINK_LIBRARY pthread m dl)
