@@ -18,6 +18,7 @@ endif()
 message("CMAKE_BUILD_TYPE" ${CMAKE_BUILD_TYPE})
 message("CMAKE_CONFIGURATION_TYPES" ${CMAKE_CONFIGURATION_TYPES})
 
+# the rust lib that only contain rust code
 set(RUST_LIB "${CMAKE_CURRENT_BINARY_DIR}/${TARGET_DIR}/aoc_rust.lib")
 
 add_custom_command(
@@ -28,6 +29,7 @@ add_custom_command(
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
+# the c++ library that encapsulate the rust library
 add_library(aoc_rust_cxx STATIC ${CMAKE_CURRENT_BINARY_DIR}/aoc_rust.cpp)
 
 if (MSVC)

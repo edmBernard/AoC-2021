@@ -1,6 +1,6 @@
 #include "controller.hpp"
 
-#include "rust_part.h"
+#include "aoc_rust.h"
 
 #include <spdlog/spdlog.h>
 
@@ -11,7 +11,7 @@ namespace aoc {
 namespace fs = std::filesystem;
 
 RegisterCommand day02("day02", {{"day02.txt", 1, 2}}, [](fs::path filename) -> std::tuple<size_t, size_t> {
-  uint16_t result = addition(12, 13);
+  uint16_t result = addition(12, 13, filename.string());
 
   spdlog::debug("result from rust: {}", result);
   return {1, 2};
