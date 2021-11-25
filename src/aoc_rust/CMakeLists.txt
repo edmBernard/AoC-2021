@@ -32,6 +32,7 @@ add_custom_command(
   COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/cxxbridge/aoc_rust/src/lib.rs.cc ${CMAKE_CURRENT_BINARY_DIR}/aoc_rust.cpp
   COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/cxxbridge/aoc_rust/src/lib.rs.h ${CMAKE_CURRENT_BINARY_DIR}/aoc_rust.h
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+  USES_TERMINAL
 )
 
 # the c++ library that encapsulate the rust library
