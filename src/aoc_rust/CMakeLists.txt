@@ -7,16 +7,19 @@ message(STATUS "Library suffix used for rust generated library : ${CMAKE_STATIC_
 # the rust lib that only contain rust code
 set(RUST_LIB "${CMAKE_CURRENT_BINARY_DIR}/${TARGET_DIR}/${CMAKE_FIND_LIBRARY_PREFIXES}aoc_rust${CMAKE_STATIC_LIBRARY_SUFFIX}")
 
+# list of rust file to trigger cargo on change
+file(GLOB RUST_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.rs)
+
 # use a custom target instead of a custom command to force the regeneration
-add_custom_target(
-  target_to_build_bridge
-  BYPRODUCTS ${RUST_LIB} ${CMAKE_CURRENT_BINARY_DIR}/aoc_rust.cpp ${CMAKE_CURRENT_BINARY_DIR}/aoc_rust.h
+add_custom_command(
+  OUTPUT  ${RUST_LIB} ${CMAKE_CURRENT_BINARY_DIR}/aoc_rust.cpp ${CMAKE_CURRENT_BINARY_DIR}/aoc_rust.h
   COMMAND ${CARGO_CMD} --target-dir=${CMAKE_CURRENT_BINARY_DIR}
   COMMAND ${CMAKE_COMMAND} -E echo "Target dir : " ${TARGET_DIR}
   COMMAND ${CMAKE_COMMAND} -E echo "Cargo command : " ${CARGO_CMD}
   COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/cxxbridge/aoc_rust/src/lib.rs.cc ${CMAKE_CURRENT_BINARY_DIR}/aoc_rust.cpp
   COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/cxxbridge/aoc_rust/src/lib.rs.h ${CMAKE_CURRENT_BINARY_DIR}/aoc_rust.h
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+  DEPENDS ${RUST_SOURCES}
   USES_TERMINAL
 )
 
