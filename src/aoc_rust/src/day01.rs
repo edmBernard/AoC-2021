@@ -1,15 +1,8 @@
 use cxx::CxxString;
 
-// #[cxx::bridge(namespace = "aoc::rust")]
-// mod ffi {
-//   extern "Rust" {
-
-//     fn day01(filename: &CxxString) -> u16;
-//   }
-// }
-
-pub fn day01(filename: &CxxString) -> u16 {
+pub fn day01(filename: &CxxString, part1: &mut u64, part2: &mut u64) {
+  *part1 = 42;
+  *part2 = 43;
   println!("Message from rust");
   println!("{}", filename);
-  42
 }

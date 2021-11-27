@@ -1,4 +1,3 @@
-
 mod day01;
 mod day02;
 
@@ -9,14 +8,9 @@ use crate::day02::day02;
 mod ffi {
   extern "Rust" {
 
-    fn day02(filename: &CxxString) -> u16;
-    fn day01(filename: &CxxString) -> u16;
-
+    // it's an ugly signature but cxx_rust don't support tuple yet.
+    // so I can't return result as a tuple that will be use in c++
+    fn day01(filename: &CxxString, part1: &mut u64, part2: &mut u64);
+    fn day02(filename: &CxxString, part1: &mut u64, part2: &mut u64);
   }
 }
-
-// pub fn day02(filename: &CxxString) -> u16 {
-//   println!("Message from rust");
-//   println!("{}", filename);
-//   day01::day01(filename)
-// }
