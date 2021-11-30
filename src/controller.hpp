@@ -15,8 +15,8 @@ namespace aoc {
 
 namespace fs = std::filesystem;
 
-using CommandFunction = std::function<std::tuple<size_t, size_t>(fs::path)>;
-using ExpectedResults = std::vector<std::tuple<fs::path, size_t, size_t>>;
+using CommandFunction = std::function<std::tuple<uint64_t, uint64_t>(fs::path)>;
+using ExpectedResults = std::vector<std::tuple<fs::path, uint64_t, uint64_t>>;
 using CommandRegister = std::vector<std::tuple<std::string, ExpectedResults, CommandFunction>>;
 
 class Controller {
