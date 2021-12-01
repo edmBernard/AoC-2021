@@ -38,9 +38,8 @@ pub fn day01raw(filename: &CxxString, part1: &mut u64, part2: &mut u64) {
 
   let input_puzzle: Vec<u16> = std::fs::read_to_string(filename.to_str().unwrap())
     .expect("File not found!")
-    .trim()
-    .split("\n")
-    .map(|x| x.parse().unwrap())
+    .lines()
+    .map(|x| x.parse::<u16>().unwrap())
     .collect();
 
   // part1

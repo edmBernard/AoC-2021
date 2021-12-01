@@ -68,7 +68,7 @@ RegisterCommand day01rustv2("day01,rust,v2", {
   }, [](fs::path filename) -> std::tuple<uint64_t, uint64_t> {
   uint64_t part1 = 0;
   uint64_t part2 = 0;
-  rust::day01(filename.string(), part1, part2);
+  rust::day01raw(filename.string(), part1, part2);
   return {part1, part2};
 });
 
