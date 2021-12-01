@@ -38,15 +38,53 @@ RegisterCommand day01("day01", {
     // part1
     uint16_t part1Result = 0;
     for (int idx = 1; idx < depthList.size(); ++idx) {
-      part1Result += depthList[idx] > depthList[idx-1] ? 1 : 0;
+      if (depthList[idx] > depthList[idx-1]) {
+        ++part1Result;
+      }
     }
 
     // part2
     uint16_t part2Result = 0;
     uint16_t previous = depthList[0] + depthList[1] + depthList[2];
-    for (int idx = 3; idx < depthList.size(); ++idx) {
+    for (int idx = 2; idx < depthList.size(); ++idx) {
       const uint16_t sum = depthList[idx] + depthList[idx-1] + depthList[idx-2];
-      part2Result += sum > previous ? 1 : 0;
+      if (sum > previous) {
+        ++part2Result;
+      }
+      previous = sum;
+    }
+    return {part1Result, part2Result};
+});
+
+RegisterCommand day01simple("day01,simple", {
+    { "input_day01.txt",       1233,   1275},
+    { "input_day01_test1.txt", 7,   5},
+  }, [](fs::path filename) -> std::tuple<uint64_t, uint64_t> {
+
+    std::ifstream infile(filename);
+    if (!infile.is_open()) {
+      throw std::runtime_error(fmt::format("File Not Found : {}", filename.string()));
+    }
+
+    std::istream_iterator<uint16_t> start(infile), end;
+    std::vector<uint16_t> depthList(start, end);
+
+    // part1
+    uint16_t part1Result = 0;
+    for (int idx = 1; idx < depthList.size(); ++idx) {
+      if (depthList[idx] > depthList[idx-1]) {
+        ++part1Result;
+      }
+    }
+
+    // part2
+    uint16_t part2Result = 0;
+    uint16_t previous = depthList[0] + depthList[1] + depthList[2];
+    for (int idx = 2; idx < depthList.size(); ++idx) {
+      const uint16_t sum = depthList[idx] + depthList[idx-1] + depthList[idx-2];
+      if (sum > previous) {
+        ++part2Result;
+      }
       previous = sum;
     }
     return {part1Result, part2Result};
