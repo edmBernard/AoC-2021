@@ -12,7 +12,7 @@ namespace aoc {
 namespace xs = xsimd;
 namespace fs = std::filesystem;
 
-RegisterCommand day01xsimd("day01xsimd", {{"day01.txt", 1, 2}}, [](fs::path filename) -> std::tuple<uint64_t, uint64_t> {
+RegisterCommand day01xsimd("day01,xsimd", {{"day01.txt", 1, 2}}, [](fs::path filename) -> std::tuple<uint64_t, uint64_t> {
   spdlog::debug("filename: {}", filename.string());
 
   std::ifstream infile(filename);
@@ -27,16 +27,16 @@ RegisterCommand day01xsimd("day01xsimd", {{"day01.txt", 1, 2}}, [](fs::path file
   }
   std::vector<int32_t> res(numberList.size(), 0);
 
-  for (auto& v : numberList) {
-    fmt::print("{}, ", v);
-  }
-  for (auto& v : res) {
-    fmt::print("{}, ", v);
-  }
+  // for (auto& v : numberList) {
+  //   fmt::print("{}, ", v);
+  // }
+  // for (auto& v : res) {
+  //   fmt::print("{}, ", v);
+  // }
   using b_type = xs::batch<int32_t, xs::avx>;
   std::size_t inc = b_type::size;
   std::size_t size = res.size();
-  fmt::print("\ninc: {}, \n", inc);
+  // fmt::print("\ninc: {}, \n", inc);
 
   // size for which the vectorization is possible
   std::size_t vec_size = size - size % inc;
@@ -52,9 +52,9 @@ RegisterCommand day01xsimd("day01xsimd", {{"day01.txt", 1, 2}}, [](fs::path file
       res[i] = (numberList[i] * 2);
   }
 
-  for (auto& v : res) {
-    fmt::print("{}, ", v);
-  }
+  // for (auto& v : res) {
+  //   fmt::print("{}, ", v);
+  // }
   return {1, 2};
 });
 

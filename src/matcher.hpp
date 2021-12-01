@@ -64,4 +64,16 @@ inline bool matcher(std::string_view name, std::string_view filter) {
   return negative ? !doesMatch : doesMatch;
 }
 
+inline bool matcher(std::string_view name, const std::vector<std::string>& filters) {
+
+  if (filters.empty()) {
+    return true;
+  }
+  bool toExecute = true;
+  for (auto filter : filters) {
+    toExecute &= matcher(name, filter);
+  }
+  return toExecute;
+}
+
 } // namespace aoc

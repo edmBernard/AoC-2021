@@ -21,8 +21,8 @@ using CommandRegister = std::vector<std::tuple<std::string, ExpectedResults, Com
 
 class Controller {
 public:
-  Controller(std::string filter)
-      : commands(GetCommandRegister()), filter(filter) {
+  Controller(std::vector<std::string> filters)
+      : commands(GetCommandRegister()), filters(filters) {
     spdlog::debug("Number of command registered : {}", commands.size());
   }
 
@@ -33,7 +33,7 @@ public:
 
     const bool isDirectory = fs::is_directory(input);
     for (auto &[name, expectedResults, command] : commands) {
-      if (!matcher(name, filter)) {
+      if (!matcher(name, filters)) {
         continue;
       }
       if (expectedResults.empty() && isDirectory) {
@@ -83,7 +83,7 @@ public:
 
 private:
   const CommandRegister commands;
-  const std::string filter;
+  const std::vector<std::string> filters;
 };
 
 class RegisterCommand {

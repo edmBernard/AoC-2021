@@ -28,7 +28,7 @@ RegisterCommand day01("day01", {
     // from_char is faster than stol
     while (getline(infile, line)) {
       uint16_t result;
-      const auto [ptr, ec] { std::from_chars(line.data(), line.data() + line.size(), result) };
+      const auto [ptr, ec] = std::from_chars(line.data(), line.data() + line.size(), result);
       if (ec != std::errc())
         throw std::runtime_error(fmt::format("Fail to parse : {}", line));
       depthList.push_back(result);
