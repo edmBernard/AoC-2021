@@ -24,12 +24,14 @@ RegisterCommand day01("day01", {
 
     std::vector<uint16_t> depthList;
     std::string line;
-    uint16_t result;
-    while (infile >> line) {
-        const auto [ptr, ec] { std::from_chars(line.data(), line.data() + line.size(), result) };
-        if (ec != std::errc())
-          throw std::runtime_error(fmt::format("Fail to parse : {}", line));
-        depthList.push_back(result);
+    // getline(infile, line) is faster than infile >> line
+    // from_char is faster than stol
+    while (getline(infile, line)) {
+      uint16_t result;
+      const auto [ptr, ec] { std::from_chars(line.data(), line.data() + line.size(), result) };
+      if (ec != std::errc())
+        throw std::runtime_error(fmt::format("Fail to parse : {}", line));
+      depthList.push_back(result);
     }
 
     // part1
