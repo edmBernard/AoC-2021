@@ -37,3 +37,36 @@ pub fn day01(filename: &CxxString, part1: &mut u64, part2: &mut u64) {
     previous = sum;
   }
 }
+
+pub fn day01raw(filename: &CxxString, part1: &mut u64, part2: &mut u64) {
+
+  let input_puzzle: Vec<u32> = std::fs::read_to_string(filename.to_str().unwrap())
+    .expect("File not found!")
+    .trim()
+    .split("\n")
+    .map(|x| x.parse().unwrap())
+    .collect();
+
+  // part1
+  let mut previous = &input_puzzle[0];
+  for depth in &input_puzzle {
+    *part1 += if depth > previous {
+      1
+    } else {
+      0
+    };
+    previous = depth;
+  }
+
+  // part2
+  let mut previous = input_puzzle[0] +  input_puzzle[1] +  input_puzzle[2];
+  for idx in 0..input_puzzle.len()-2 {
+    let sum = input_puzzle[idx] +  input_puzzle[idx+1] +  input_puzzle[idx+2];
+    *part2 += if sum > previous {
+      1
+    } else {
+      0
+    };
+    previous = sum;
+  }
+}

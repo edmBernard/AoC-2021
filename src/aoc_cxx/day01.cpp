@@ -59,5 +59,14 @@ RegisterCommand day01rust("day01,rust", {
   rust::day01(filename.string(), part1, part2);
   return {part1, part2};
 });
+RegisterCommand day01rustv2("day01,rust,v2", {
+    { "input_day01.txt",       1233,   1275},
+    { "input_day01_test1.txt", 7,   5},
+  }, [](fs::path filename) -> std::tuple<uint64_t, uint64_t> {
+  uint64_t part1 = 0;
+  uint64_t part2 = 0;
+  rust::day01(filename.string(), part1, part2);
+  return {part1, part2};
+});
 
 } // namespace aoc
