@@ -8,9 +8,14 @@
 #include <fstream>
 #include <charconv>
 
+#include <range/v3/all.hpp>
+
+
 namespace aoc {
 
 namespace fs = std::filesystem;
+namespace rs = ranges;
+namespace rv = ranges::views;
 
 RegisterCommand day01("day01", {
     { "input_day01.txt",       1233,   1275},
@@ -90,6 +95,43 @@ RegisterCommand day01simple("day01,simple", {
     return {part1Result, part2Result};
 });
 
+RegisterCommand day01functional("day01,functional", {
+    { "input_day01.txt",       1233,   1275},
+    { "input_day01_test1.txt", 7,   5},
+  }, [](fs::path filename) -> std::tuple<uint64_t, uint64_t> {
+
+
+    std::ifstream infile(filename);
+    if (!infile.is_open()) {
+      throw std::runtime_error(fmt::format("File Not Found : {}", filename.string()));
+    }
+
+    const std::vector<uint16_t> depthList = rs::istream_view<uint16_t>(infile) | rs::to<std::vector>;
+
+    // part1
+    const auto increasePart1 =
+        depthList
+        | rv::sliding(2)
+        | rv::transform([](auto&& window) { return window[0] < window[1] ? 1 : 0; });
+
+    const uint64_t part1Result = rs::accumulate(increasePart1, 0);
+
+    // part2
+    const auto increasePart2_temp =
+        depthList
+        | rv::sliding(3)
+        | rv::transform([](auto&& window) { return rs::accumulate(window, 0); });
+
+    const auto increasePart2_temp2 =
+      increasePart2_temp
+        | rv::sliding(2)
+        | rv::transform([](auto&& window) { return window[0] < window[1] ? 1 : 0; });
+
+    const uint64_t part2Result = rs::accumulate(increasePart2_temp2, 0);
+
+    return {part1Result, part2Result};
+});
+
 RegisterCommand day01rust("day01,rust", {
     { "input_day01.txt",       1233,   1275},
     { "input_day01_test1.txt", 7,   5},
@@ -100,7 +142,7 @@ RegisterCommand day01rust("day01,rust", {
   return {part1, part2};
 });
 
-RegisterCommand day01rustv2("day01,rust,functional", {
+RegisterCommand day01rustfunctional("day01,rust,functional", {
     { "input_day01.txt",       1233,   1275},
     { "input_day01_test1.txt", 7,   5},
   }, [](fs::path filename) -> std::tuple<uint64_t, uint64_t> {
