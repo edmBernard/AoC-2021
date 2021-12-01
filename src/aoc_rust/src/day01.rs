@@ -1,17 +1,16 @@
 use cxx::CxxString;
 use std::convert::TryFrom;
 
-use std::fs::File;
 use std::io::{BufReader, BufRead};
 
 pub fn day01(filename: &CxxString, part1: &mut u64, part2: &mut u64) {
 
-  let input = File::open(filename.to_str().unwrap()).expect("File not found!");
+  let input = std::fs::File::open(filename.to_str().unwrap()).expect("File not found!");
   let buffered = BufReader::new(input);
 
   let mut input_puzzle = Vec::new();
   for line in buffered.lines() {
-    let value : u32 = line.unwrap().parse().unwrap();
+    let value : u16 = line.unwrap().parse().unwrap();
     input_puzzle.push(value);
   }
 
