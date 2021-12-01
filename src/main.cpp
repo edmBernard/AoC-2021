@@ -18,7 +18,8 @@ int main(int argc, char *argv[]) try {
   // clang-format off
   options.add_options()
     ("filter", "Filter to select command", cxxopts::value<std::string>()->default_value(""), "FILTER")
-    ("i,input", "Filename or directory containing input files", cxxopts::value<std::string>(), "input")
+    ("i,input", "Filename or directory containing input files", cxxopts::value<std::string>(), "INPUT")
+    ("n", "Number of run for bench", cxxopts::value<int>()->default_value("1"), "NRUN")
     ("h,help", "Print help")
     ;
   // clang-format on
@@ -38,7 +39,7 @@ int main(int argc, char *argv[]) try {
   // =================================================================================================
   // Code
   aoc::Controller engine(cli["filter"].as<std::string>());
-  engine.run(cli["input"].as<std::string>());
+  engine.run(cli["input"].as<std::string>(), std::max(1, cli["n"].as<int>()));
 
   return EXIT_SUCCESS;
 

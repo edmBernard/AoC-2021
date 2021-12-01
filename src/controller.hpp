@@ -26,7 +26,7 @@ public:
     spdlog::debug("Number of command registered : {}", commands.size());
   }
 
-  void run(fs::path input) {
+  void run(fs::path input, int repetition) {
     if (!fs::exists(input)) {
       throw std::runtime_error(fmt::format("Input path does not exists : {}", fs::absolute(input).string()));
     }
@@ -52,11 +52,12 @@ public:
 
       for (auto &[filename, expectedPart1, expectedPart2] : expectedResults) {
         auto start_temp = std::chrono::high_resolution_clock::now();
-
+        for (int i = 0; i < repetition-1; ++i) {
+          auto [part1, part2] = command(input / filename);
+        }
         auto [part1, part2] = command(input / filename);
-
         std::chrono::duration<double, std::milli> elapsed_temp = std::chrono::high_resolution_clock::now() - start_temp;
-        spdlog::info("{: <10} in {:>7.2f} ms : part1={:<10} part2={:<10}", name, elapsed_temp.count(), part1, part2);
+        spdlog::info("{: <10} in {:>7.2f} ms : part1={:<10} part2={:<10}", name, elapsed_temp.count() / repetition, part1, part2);
 
         if (part1 != expectedPart1) {
           spdlog::error("Result Part1 missmatch : expected={:<10}  got={:<10}", expectedPart1, part1);
