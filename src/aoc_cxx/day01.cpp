@@ -10,8 +10,8 @@ namespace aoc {
 namespace fs = std::filesystem;
 
 RegisterCommand day01("day01", {
-    { "day01.txt",              381699,   111605670},
-    { "day01_part1_test1.txt",  514579,   241861950},
+    { "input_day01.txt",       1233,   111605670},
+    { "input_day01_test1.txt", 7,   5},
   }, [](fs::path filename) -> std::tuple<uint64_t, uint64_t> {
 
     std::ifstream infile(filename);
@@ -19,74 +19,32 @@ RegisterCommand day01("day01", {
       throw std::runtime_error(fmt::format("File Not Found : {}", filename.string()));
     }
 
-    std::vector<uint64_t> numberList;
+    std::vector<uint64_t> depthList;
     std::string line;
     while (infile >> line) {
-      numberList.push_back(std::stoi(line));
+      depthList.push_back(std::stoi(line));
     }
 
-    long part1Result;
-    long part2Result;
     // part1
-    for (auto l1 : numberList) {
-      for (auto l2 : numberList) {
-        if (l1 + l2 == 2020) {
-          part1Result = l1 * l2;
-        }
+    uint64_t part1Result = 0;
+    {
+      uint64_t previous = depthList[0];
+      for (auto depth : depthList) {
+        part1Result += depth > previous ? 1 : 0;
+        previous = depth;
       }
     }
 
     // part2
-    for (auto l1 : numberList) {
-      for (auto l2 : numberList) {
-        for (auto l3 : numberList) {
-          if (l1 + l2 + l3 == 2020) {
-            part2Result = l1 * l2 * l3;
-          }
-        }
+    uint64_t part2Result = 0;
+    {
+      uint64_t previous = depthList[0] + depthList[1] + depthList[2];
+      for (int idx = 0; idx < depthList.size() - 2; ++idx) {
+        const int sum = depthList[idx] + depthList[idx+1] + depthList[idx+2];
+        part2Result += sum > previous ? 1 : 0;
+        previous = sum;
       }
     }
-
-    spdlog::debug("filename: {}", filename.string());
-    return {part1Result, part2Result};
-});
-
-RegisterCommand day01Test("day01,test", {}, [](fs::path filename) -> std::tuple<uint64_t, uint64_t> {
-
-    std::ifstream infile(filename);
-    if (!infile.is_open()) {
-      throw std::runtime_error(fmt::format("File Not Found : {}", filename.string()));
-    }
-
-    std::vector<uint64_t> numberList;
-    std::string line;
-    while (infile >> line) {
-      numberList.push_back(std::stoi(line));
-    }
-
-    long part1Result;
-    long part2Result;
-    // part1
-    for (auto l1 : numberList) {
-      for (auto l2 : numberList) {
-        if (l1 + l2 == 2020) {
-          part1Result = l1 * l2;
-        }
-      }
-    }
-
-    // part2
-    for (auto l1 : numberList) {
-      for (auto l2 : numberList) {
-        for (auto l3 : numberList) {
-          if (l1 + l2 + l3 == 2020) {
-            part2Result = l1 * l2 * l3;
-          }
-        }
-      }
-    }
-
-    spdlog::debug("filename: {}", filename.string());
     return {part1Result, part2Result};
 });
 
