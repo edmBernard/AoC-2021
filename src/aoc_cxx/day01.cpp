@@ -21,31 +21,25 @@ RegisterCommand day01("day01", {
       throw std::runtime_error(fmt::format("File Not Found : {}", filename.string()));
     }
 
-    std::vector<uint64_t> depthList;
+    std::vector<uint16_t> depthList;
     std::string line;
     while (infile >> line) {
       depthList.push_back(std::stoi(line));
     }
 
     // part1
-    uint64_t part1Result = 0;
-    {
-      uint64_t previous = depthList[0];
-      for (auto depth : depthList) {
-        part1Result += depth > previous ? 1 : 0;
-        previous = depth;
-      }
+    uint16_t part1Result = 0;
+    for (int idx = 1; idx < depthList.size(); ++idx) {
+      part1Result += depthList[idx] > depthList[idx-1] ? 1 : 0;
     }
 
     // part2
-    uint64_t part2Result = 0;
-    {
-      uint64_t previous = depthList[0] + depthList[1] + depthList[2];
-      for (int idx = 0; idx < depthList.size() - 2; ++idx) {
-        const int sum = depthList[idx] + depthList[idx+1] + depthList[idx+2];
-        part2Result += sum > previous ? 1 : 0;
-        previous = sum;
-      }
+    uint16_t part2Result = 0;
+    uint16_t previous = depthList[0] + depthList[1] + depthList[2];
+    for (int idx = 3; idx < depthList.size(); ++idx) {
+      const uint16_t sum = depthList[idx] + depthList[idx-1] + depthList[idx-2];
+      part2Result += sum > previous ? 1 : 0;
+      previous = sum;
     }
     return {part1Result, part2Result};
 });
@@ -59,6 +53,7 @@ RegisterCommand day01rust("day01,rust", {
   rust::day01(filename.string(), part1, part2);
   return {part1, part2};
 });
+
 RegisterCommand day01rustv2("day01,rust,v2", {
     { "input_day01.txt",       1233,   1275},
     { "input_day01_test1.txt", 7,   5},

@@ -8,32 +8,28 @@ pub fn day01(filename: &CxxString, part1: &mut u64, part2: &mut u64) {
   let input = File::open(filename.to_str().unwrap()).expect("File not found!");
   let buffered = BufReader::new(input);
 
-  let mut depth_list = Vec::new();
+  let mut input_puzzle = Vec::new();
   for line in buffered.lines() {
     let value : u32 = line.unwrap().parse().unwrap();
-    depth_list.push(value);
+    input_puzzle.push(value);
   }
 
   // part1
-  let mut previous = &depth_list[0];
-  for depth in &depth_list {
-    *part1 += if depth > previous {
-      1
-    } else {
-      0
-    };
+  let mut previous = input_puzzle[0];
+  for &depth in &input_puzzle {
+    if depth > previous {
+      *part1 += 1
+    }
     previous = depth;
   }
 
   // part2
-  let mut previous = depth_list[0] +  depth_list[1] +  depth_list[2];
-  for idx in 0..depth_list.len()-2 {
-    let sum = depth_list[idx] +  depth_list[idx+1] +  depth_list[idx+2];
-    *part2 += if sum > previous {
-      1
-    } else {
-      0
-    };
+  let mut previous = input_puzzle[0] +  input_puzzle[1] +  input_puzzle[2];
+  for idx in 2..input_puzzle.len() {
+    let sum = input_puzzle[idx] +  input_puzzle[idx-1] +  input_puzzle[idx-2];
+    if sum > previous {
+      *part2 += 1
+    }
     previous = sum;
   }
 }
@@ -48,25 +44,21 @@ pub fn day01raw(filename: &CxxString, part1: &mut u64, part2: &mut u64) {
     .collect();
 
   // part1
-  let mut previous = &input_puzzle[0];
-  for depth in &input_puzzle {
-    *part1 += if depth > previous {
-      1
-    } else {
-      0
-    };
+  let mut previous = input_puzzle[0];
+  for &depth in &input_puzzle {
+    if depth > previous {
+      *part1 += 1
+    }
     previous = depth;
   }
 
   // part2
   let mut previous = input_puzzle[0] +  input_puzzle[1] +  input_puzzle[2];
-  for idx in 0..input_puzzle.len()-2 {
-    let sum = input_puzzle[idx] +  input_puzzle[idx+1] +  input_puzzle[idx+2];
-    *part2 += if sum > previous {
-      1
-    } else {
-      0
-    };
+  for idx in 2..input_puzzle.len() {
+    let sum = input_puzzle[idx] +  input_puzzle[idx-1] +  input_puzzle[idx-2];
+    if sum > previous {
+      *part2 += 1
+    }
     previous = sum;
   }
 }
