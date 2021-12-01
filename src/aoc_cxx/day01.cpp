@@ -26,6 +26,7 @@ RegisterCommand day01("day01", {
     std::string line;
     // getline(infile, line) is faster than infile >> line
     // from_char is faster than stol
+    // istream_iterator<uint16_t> is also slower than this while loop
     while (getline(infile, line)) {
       uint16_t result;
       const auto [ptr, ec] = std::from_chars(line.data(), line.data() + line.size(), result);
