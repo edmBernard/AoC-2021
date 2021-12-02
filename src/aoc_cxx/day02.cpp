@@ -20,7 +20,7 @@ enum Direction {
 
 RegisterCommand day02("day02", {
     { "input_day02.txt",       2117664,   2073416724},
-    { "input_day02_test1.txt", 150,   900},
+    { "input_day02_test1.txt", 150,       900},
   }, [](fs::path filename) -> std::tuple<uint64_t, uint64_t> {
 
     std::ifstream infile(filename);
@@ -81,12 +81,14 @@ RegisterCommand day02("day02", {
     return {part1Result, part2Result};
 });
 
-// RegisterCommand day02rust("day02,rust", {{"day02.txt", 1, 2}}, [](fs::path filename) -> std::tuple<uint64_t, uint64_t> {
-//   uint64_t part1;
-//   uint64_t part2;
-//   rust::day02(filename.string(), part1, part2);
-//   spdlog::debug("result from rust: part1 {} part2 {}", part1, part2);
-//   return {part1, part2};
-// });
+RegisterCommand day02rustfunctional("day02,rust,functional", {
+    { "input_day02.txt",       2117664,   2073416724},
+    { "input_day02_test1.txt", 150,       900},
+  }, [](fs::path filename) -> std::tuple<uint64_t, uint64_t> {
+  uint64_t part1 = 0;
+  uint64_t part2 = 0;
+  rust::day02functional(filename.string(), part1, part2);
+  return {part1, part2};
+});
 
 } // namespace aoc

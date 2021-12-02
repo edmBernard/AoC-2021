@@ -1,6 +1,6 @@
 use cxx::CxxString;
-use std::convert::TryFrom;
 
+use std::convert::TryFrom;
 use std::io::{BufReader, BufRead};
 
 pub fn day01(filename: &CxxString, part1: &mut u64, part2: &mut u64) {

@@ -3,7 +3,7 @@ mod day02;
 
 use crate::day01::day01;
 use crate::day01::day01functional;
-use crate::day02::day02;
+use crate::day02::day02functional;
 
 #[cxx::bridge(namespace = "aoc::rust")]
 mod ffi {
@@ -13,6 +13,6 @@ mod ffi {
     // so I can't return result as a tuple that will be use in c++
     fn day01(filename: &CxxString, part1: &mut u64, part2: &mut u64);
     fn day01functional(filename: &CxxString, part1: &mut u64, part2: &mut u64);
-    fn day02(filename: &CxxString, part1: &mut u64, part2: &mut u64);
+    fn day02functional(filename: &CxxString, part1: &mut u64, part2: &mut u64);
   }
 }
