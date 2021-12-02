@@ -33,12 +33,8 @@ RegisterCommand day02("day02", {
     while (getline(infile, line)) {
 
       const auto match = line.find(" ");
-      if (match == std::string::npos) {
+      if (match == std::string::npos)
         throw std::runtime_error(fmt::format("Fail to parse : {}", line));
-      }
-
-      std::string_view direction(line.data(), match);
-      std::string_view value(line.data() + match);
 
       uint16_t result;
       // +1 to escape matching space to remains in value
@@ -46,6 +42,7 @@ RegisterCommand day02("day02", {
       if (ec != std::errc())
         throw std::runtime_error(fmt::format("Fail to parse : {}", line));
 
+      std::string_view direction(line.data(), match);
       if (direction == "forward") {
         inputPuzzle.emplace_back(Direction::Forward, result);
       } else if (direction == "up") {
@@ -57,58 +54,39 @@ RegisterCommand day02("day02", {
       }
     }
 
-    // part1
     uint64_t position = 0;
-    uint64_t depth = 0;
-    for (auto& [dir, value] : inputPuzzle) {
-      switch (dir)
-      {
-      case Direction::Forward:
-        position += value;
-        break;
-      case Direction::Up:
-        depth -= value;
-        break;
-      case Direction::Down:
-        depth += value;
-        break;
-      }
-    }
-    spdlog::debug("depth={} position={}", depth, position);
-    uint64_t part1Result = depth * position;
-
-    // part2
-    position = 0;
-    depth = 0;
+    uint64_t depthPart1 = 0;
+    uint64_t depthPart2 = 0;
     uint64_t aim = 0;
     for (auto& [dir, value] : inputPuzzle) {
       switch (dir)
       {
       case Direction::Forward:
         position += value;
-        depth += value * aim;
+        depthPart2 += value * aim;
         break;
       case Direction::Up:
+        depthPart1 -= value;
         aim -= value;
         break;
       case Direction::Down:
+        depthPart1 += value;
         aim += value;
         break;
       }
     }
-    spdlog::debug("depth={} position={}", depth, position);
-
-    uint64_t part2Result = depth * position;
+    uint64_t part1Result = depthPart1 * position;
+    uint64_t part2Result = depthPart2 * position;
 
     return {part1Result, part2Result};
 });
 
-RegisterCommand day02rust("day02,rust", {{"day02.txt", 1, 2}}, [](fs::path filename) -> std::tuple<uint64_t, uint64_t> {
-  uint64_t part1;
-  uint64_t part2;
-  rust::day02(filename.string(), part1, part2);
-  spdlog::debug("result from rust: part1 {} part2 {}", part1, part2);
-  return {part1, part2};
-});
+// RegisterCommand day02rust("day02,rust", {{"day02.txt", 1, 2}}, [](fs::path filename) -> std::tuple<uint64_t, uint64_t> {
+//   uint64_t part1;
+//   uint64_t part2;
+//   rust::day02(filename.string(), part1, part2);
+//   spdlog::debug("result from rust: part1 {} part2 {}", part1, part2);
+//   return {part1, part2};
+// });
 
 } // namespace aoc
