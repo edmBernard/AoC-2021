@@ -12,11 +12,13 @@ namespace aoc {
 
 namespace fs = std::filesystem;
 
+
 enum Direction {
   Up,
   Down,
   Forward
 };
+
 
 RegisterCommand day02("day02", {
     { "input_day02.txt",       2117664,   2073416724},
@@ -80,6 +82,7 @@ RegisterCommand day02("day02", {
 
     return {part1Result, part2Result};
 });
+
 
 RegisterRustCommand day02rustfunctional("day02,rust,functional", {
     { "input_day02.txt",       2117664,   2073416724},
