@@ -23,9 +23,6 @@ enum Direction {
 };
 
 
-
-
-
 std::pair<Direction, uint16_t> parseInputLine(std::string_view direction, std::string_view value) {
 
   uint16_t result;
