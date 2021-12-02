@@ -19,8 +19,8 @@ enum Direction {
 };
 
 RegisterCommand day02("day02", {
-    { "input_day02.txt",       2117664,   1275},
-    { "input_day02_test1.txt", 150,   5},
+    { "input_day02.txt",       2117664,   2073416724},
+    { "input_day02_test1.txt", 150,   900},
   }, [](fs::path filename) -> std::tuple<uint64_t, uint64_t> {
 
     std::ifstream infile(filename);
@@ -78,15 +78,28 @@ RegisterCommand day02("day02", {
     uint64_t part1Result = depth * position;
 
     // part2
-    uint16_t part2Result = 0;
-    // uint16_t previous = depthList[0] + depthList[1] + depthList[2];
-    // for (int idx = 2; idx < depthList.size(); ++idx) {
-    //   const uint16_t sum = depthList[idx] + depthList[idx-1] + depthList[idx-2];
-    //   if (sum > previous) {
-    //     ++part2Result;
-    //   }
-    //   previous = sum;
-    // }
+    position = 0;
+    depth = 0;
+    uint64_t aim = 0;
+    for (auto& [dir, value] : inputPuzzle) {
+      switch (dir)
+      {
+      case Direction::Forward:
+        position += value;
+        depth += value * aim;
+        break;
+      case Direction::Up:
+        aim -= value;
+        break;
+      case Direction::Down:
+        aim += value;
+        break;
+      }
+    }
+    spdlog::debug("depth={} position={}", depth, position);
+
+    uint64_t part2Result = depth * position;
+
     return {part1Result, part2Result};
 });
 
