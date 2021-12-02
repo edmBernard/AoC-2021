@@ -75,8 +75,8 @@ RegisterCommand day02("day02", {
         break;
       }
     }
-    uint64_t part1Result = depthPart1 * position;
-    uint64_t part2Result = depthPart2 * position;
+    const uint64_t part1Result = depthPart1 * position;
+    const uint64_t part2Result = depthPart2 * position;
 
     return {part1Result, part2Result};
 });

@@ -18,8 +18,8 @@ namespace rs = ranges;
 namespace rv = ranges::views;
 
 RegisterCommand day01("day01", {
-    { "input_day01.txt",       1233,   1275},
-    { "input_day01_test1.txt", 7,   5},
+    { "input_day01.txt",       1233,  1275},
+    { "input_day01_test1.txt", 7,     5},
   }, [](fs::path filename) -> std::tuple<uint64_t, uint64_t> {
 
     std::ifstream infile(filename);
@@ -62,8 +62,8 @@ RegisterCommand day01("day01", {
 });
 
 RegisterCommand day01simple("day01,simple", {
-    { "input_day01.txt",       1233,   1275},
-    { "input_day01_test1.txt", 7,   5},
+    { "input_day01.txt",       1233,  1275},
+    { "input_day01_test1.txt", 7,     5},
   }, [](fs::path filename) -> std::tuple<uint64_t, uint64_t> {
 
     std::ifstream infile(filename);
@@ -96,8 +96,8 @@ RegisterCommand day01simple("day01,simple", {
 });
 
 RegisterCommand day01functional("day01,functional", {
-    { "input_day01.txt",       1233,   1275},
-    { "input_day01_test1.txt", 7,   5},
+    { "input_day01.txt",       1233,  1275},
+    { "input_day01_test1.txt", 7,     5},
   }, [](fs::path filename) -> std::tuple<uint64_t, uint64_t> {
 
 
@@ -133,13 +133,13 @@ RegisterCommand day01functional("day01,functional", {
 });
 
 RegisterRustCommand day01rust("day01,rust", {
-    { "input_day01.txt",       1233,   1275},
-    { "input_day01_test1.txt", 7,   5},
+    { "input_day01.txt",       1233,  1275},
+    { "input_day01_test1.txt", 7,     5},
   }, rust::day01);
 
 RegisterRustCommand day01rustfunctional("day01,rust,functional", {
-    { "input_day01.txt",       1233,   1275},
-    { "input_day01_test1.txt", 7,   5},
+    { "input_day01.txt",       1233,  1275},
+    { "input_day01_test1.txt", 7,     5},
   }, rust::day01functional);
 
 } // namespace aoc
