@@ -12,6 +12,7 @@ find_package(spdlog CONFIG REQUIRED)
 find_package(fmt CONFIG REQUIRED)
 
 find_package(xsimd CONFIG REQUIRED)
+find_package(range-v3 CONFIG REQUIRED)
 
 #**************************************************************************************************
 # Include *****************************************************************************************
@@ -47,4 +48,9 @@ SET(SOURCES
 #**************************************************************************************************
 # Make configuration ******************************************************************************
 add_executable(AoC-2021 ${COMMANDS_FILE} ${SOURCES})
-target_link_libraries(AoC-2021 PRIVATE fmt::fmt-header-only spdlog::spdlog_header_only cxxopts::cxxopts xsimd aoc::rust)
+target_link_libraries(AoC-2021
+  PRIVATE fmt::fmt-header-only spdlog::spdlog_header_only cxxopts::cxxopts
+  xsimd
+  range-v3 range-v3-meta range-v3::meta range-v3-concepts
+  aoc::rust
+)
