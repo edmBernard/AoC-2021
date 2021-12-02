@@ -107,7 +107,7 @@ RegisterCommand day01range("day01,range", {
       throw std::runtime_error(fmt::format("File Not Found : {}", filename.string()));
     }
 
-    const auto depthList = rs::istream_view<uint16_t>(infile);
+    const std::vector<uint16_t> depthList = rs::istream_view<uint16_t>(infile) | rs::to<std::vector>;
 
     // part1
     // note: transform + accumulate seem to be faster than filter + distance. Probably due to the size change from filter
