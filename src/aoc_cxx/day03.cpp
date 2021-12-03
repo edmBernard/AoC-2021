@@ -17,8 +17,8 @@ namespace fs = std::filesystem;
 namespace rs = ranges;
 namespace rv = ranges::views;
 
-uint64_t part2(const std::vector<uint16_t> &inputPuzzle, size_t lineLength, bool option) {
-  uint64_t oxygen = 0;
+uint64_t treeDescent(const std::vector<uint16_t> &inputPuzzle, size_t lineLength, bool option) {
+  uint64_t result = 0;
   auto begin = inputPuzzle.begin();
   auto end = inputPuzzle.end();
   // We reduce the search at each iteration by moving begin and end of the search
@@ -30,10 +30,10 @@ uint64_t part2(const std::vector<uint16_t> &inputPuzzle, size_t lineLength, bool
       } else {
         end = pos;
       }
-      oxygen = *pos;
+      result = *pos;
     }
   }
-  return oxygen;
+  return result;
 }
 
 RegisterCommand day03("day03", {
@@ -84,8 +84,8 @@ RegisterCommand day03("day03", {
     // We sort to create a tree-like with 0 and 1
     std::sort(inputPuzzle.begin(), inputPuzzle.end());
 
-    uint64_t oxygen = part2(inputPuzzle, lineLength, true);
-    uint64_t co2 = part2(inputPuzzle, lineLength, false);
+    uint64_t oxygen = treeDescent(inputPuzzle, lineLength, true);
+    uint64_t co2 = treeDescent(inputPuzzle, lineLength, false);
 
     const uint64_t part2Result = oxygen * co2;
 
