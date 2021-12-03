@@ -29,14 +29,11 @@ RegisterCommand day03("day03", {
     }
 
     std::vector<uint16_t> inputPuzzle;
-    std::vector<std::string> inputPuzzleCheat;
     std::vector<uint64_t> occurenceOf0;
-    std::vector<uint64_t> occurenceOf1;
     std::string line;
     size_t lineLength = 0;
     while (getline(infile, line)) {
 
-      inputPuzzleCheat.push_back(line);
       uint16_t result;
       const auto [ptr, ec] = std::from_chars(line.data(), line.data() + line.size(), result, 2);
       if (ec != std::errc())
@@ -47,26 +44,25 @@ RegisterCommand day03("day03", {
       if (lineLength == 0) {
         lineLength = line.size();
         occurenceOf0 = std::vector<uint64_t>(lineLength, 0);
-        occurenceOf1 = std::vector<uint64_t>(lineLength, 0);
       }
 
       for (size_t i = 0; i < line.size(); ++i) {
         if (line[i] == '0') {
           occurenceOf0[i] += 1;
-        } else {
-          occurenceOf1[i] += 1;
         }
       }
     }
 
+    // part1
     uint64_t gammaRate = 0;
-    uint64_t epsilonRate = 0;
     for (size_t i = 0, shift = lineLength -1; i < lineLength; ++i, --shift) {
-      gammaRate += (occurenceOf0[i] > occurenceOf1[i] ? 0 : 1) << shift;
-      epsilonRate += (occurenceOf0[i] > occurenceOf1[i] ? 1 : 0) << shift;
+      gammaRate += (occurenceOf0[i] > inputPuzzle.size()/2 ? 0 : 1) << shift;
     }
+    const uint64_t epsilonRate = (1<<lineLength)-1 & ~gammaRate;
+
     const uint64_t part1Result = gammaRate * epsilonRate;
 
+    // part2
     uint64_t oxygen = 0;
     uint64_t co2 = 0;
 
@@ -76,10 +72,10 @@ RegisterCommand day03("day03", {
     {
       auto begin = inputPuzzle.begin();
       auto end = inputPuzzle.end();
+      // We reduce the search at each iteration by moving begin and end of the vector
       for (size_t i = 0, shift = lineLength -1; i < lineLength; ++i, --shift) {
         auto pos = std::find_if(begin, end, [&](auto value) { return (value >> shift) & 1; });
         if (pos != end) {
-          spdlog::debug("first={:#014b} last={:#014b} size={:04d} pos={:#014b} ({:04d}) pos-1={:#014b} iteration={}", *begin, *(end-1), end - begin, *pos, *pos, *(pos-1), i);
           if (pos - begin <= end - pos) {
             begin = pos;
           } else {
@@ -96,7 +92,6 @@ RegisterCommand day03("day03", {
       for (size_t i = 0, shift = lineLength -1; i < lineLength; ++i, --shift) {
         auto pos = std::find_if(begin, end, [&](auto value) { return (value >> shift) & 1; });
         if (pos != end) {
-          spdlog::debug("first={:#014b} last={:#014b} size={:04d} pos={:#014b} ({:04d}) iteration={}", *begin, *(end-1), end - begin, *pos, *pos, i);
           if (pos - begin <= end - pos) {
             end = pos;
           } else {
@@ -106,7 +101,6 @@ RegisterCommand day03("day03", {
         }
       }
     }
-    spdlog::debug("oxygen={} co2={}", oxygen, co2);
 
     const uint64_t part2Result = oxygen * co2;
 
