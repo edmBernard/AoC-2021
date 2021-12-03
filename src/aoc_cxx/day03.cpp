@@ -17,6 +17,24 @@ namespace fs = std::filesystem;
 namespace rs = ranges;
 namespace rv = ranges::views;
 
+uint64_t part2(const std::vector<uint16_t> &inputPuzzle, size_t lineLength, bool option) {
+  uint64_t oxygen = 0;
+  auto begin = inputPuzzle.begin();
+  auto end = inputPuzzle.end();
+  // We reduce the search at each iteration by moving begin and end of the search
+  for (size_t i = 0, shift = lineLength -1; i < lineLength; ++i, --shift) {
+    auto pos = std::find_if(begin, end, [&](auto value) { return (value >> shift) & 1; });
+    if (pos != end) {
+      if ((pos - begin <= end - pos) ^ option) {
+        begin = pos;
+      } else {
+        end = pos;
+      }
+      oxygen = *pos;
+    }
+  }
+  return oxygen;
+}
 
 RegisterCommand day03("day03", {
     { "input_day03.txt",       3429254,   5410338},
@@ -63,48 +81,16 @@ RegisterCommand day03("day03", {
     const uint64_t part1Result = gammaRate * epsilonRate;
 
     // part2
-    uint64_t oxygen = 0;
-    uint64_t co2 = 0;
-
     // We sort to create a tree-like with 0 and 1
     std::sort(inputPuzzle.begin(), inputPuzzle.end());
 
-    {
-      auto begin = inputPuzzle.begin();
-      auto end = inputPuzzle.end();
-      // We reduce the search at each iteration by moving begin and end of the vector
-      for (size_t i = 0, shift = lineLength -1; i < lineLength; ++i, --shift) {
-        auto pos = std::find_if(begin, end, [&](auto value) { return (value >> shift) & 1; });
-        if (pos != end) {
-          if (pos - begin <= end - pos) {
-            begin = pos;
-          } else {
-            end = pos;
-          }
-          oxygen = *pos;
-        }
-      }
-    }
-
-    {
-      auto begin = inputPuzzle.begin();
-      auto end = inputPuzzle.end();
-      for (size_t i = 0, shift = lineLength -1; i < lineLength; ++i, --shift) {
-        auto pos = std::find_if(begin, end, [&](auto value) { return (value >> shift) & 1; });
-        if (pos != end) {
-          if (pos - begin <= end - pos) {
-            end = pos;
-          } else {
-            begin = pos;
-          }
-          co2 = *pos;
-        }
-      }
-    }
+    uint64_t oxygen = part2(inputPuzzle, lineLength, true);
+    uint64_t co2 = part2(inputPuzzle, lineLength, false);
 
     const uint64_t part2Result = oxygen * co2;
 
     return {part1Result, part2Result};
 });
+
 
 } // namespace aoc
