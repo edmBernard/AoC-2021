@@ -2,13 +2,13 @@
 
 #include "aoc_rust.h"
 
+#include <range/v3/all.hpp>
 #include <spdlog/spdlog.h>
 
 #include <filesystem>
 #include <fstream>
 #include <charconv>
 
-#include <range/v3/all.hpp>
 
 namespace aoc {
 
