@@ -18,7 +18,6 @@ namespace rs = ranges;
 namespace rv = ranges::views;
 
 uint64_t treeDescent(const std::vector<uint16_t> &inputPuzzle, size_t lineLength, bool option) {
-  uint64_t result = 0;
   auto begin = inputPuzzle.begin();
   auto end = inputPuzzle.end();
   // We reduce the search at each iteration by moving begin and end of the search
@@ -30,10 +29,11 @@ uint64_t treeDescent(const std::vector<uint16_t> &inputPuzzle, size_t lineLength
       } else {
         end = pos;
       }
-      result = *pos;
     }
+    if (end - begin == 1)
+      break;
   }
-  return result;
+  return *begin;
 }
 
 RegisterCommand day03("day03", {
@@ -74,9 +74,9 @@ RegisterCommand day03("day03", {
     // part1
     uint64_t gammaRate = 0;
     for (size_t i = 0, shift = lineLength -1; i < lineLength; ++i, --shift) {
-      gammaRate += occurenceOf0[i] > inputPuzzle.size()/2 ? 0 : (1 << shift) ;
+      gammaRate += occurenceOf0[i] > (inputPuzzle.size() >> 1) ? 0 : (1 << shift) ;
     }
-    const uint64_t epsilonRate = (1 << lineLength)-1 & ~gammaRate;
+    const uint64_t epsilonRate = (1 << lineLength) - 1 & ~gammaRate;
 
     const uint64_t part1Result = gammaRate * epsilonRate;
 
@@ -84,8 +84,8 @@ RegisterCommand day03("day03", {
     // We sort to create a tree-like with 0 and 1
     std::sort(inputPuzzle.begin(), inputPuzzle.end());
 
-    uint64_t oxygen = treeDescent(inputPuzzle, lineLength, true);
-    uint64_t co2 = treeDescent(inputPuzzle, lineLength, false);
+    const uint64_t oxygen = treeDescent(inputPuzzle, lineLength, true);
+    const uint64_t co2 = treeDescent(inputPuzzle, lineLength, false);
 
     const uint64_t part2Result = oxygen * co2;
 

@@ -2,7 +2,7 @@ use cxx::CxxString;
 
 fn get_rule(input: &[u32], index: u32) -> u32 {
   let counts = input.iter().filter(|x| (x.clone() & (1 << index)) != 0).count() as u32;
-  if counts >= input.len() as u32 - counts { 1 } else { 0 }
+  if counts > (input.len() >> 1) as u32 { 1 } else { 0 }
 }
 
 fn tree_decent(input: &[u32], line_length : u32, option : bool) -> u32 {
@@ -21,7 +21,7 @@ pub fn day03functional(filename: &CxxString, part1: &mut u64, part2: &mut u64) {
 
   let mut line_length = 0;
 
-  let mut input_puzzle = std::fs::read_to_string(filename.to_str().unwrap())
+  let input_puzzle = std::fs::read_to_string(filename.to_str().unwrap())
     .expect("File not found!")
     .lines()
     .map(|x| {
@@ -34,13 +34,11 @@ pub fn day03functional(filename: &CxxString, part1: &mut u64, part2: &mut u64) {
     .map(|x| u32::from_str_radix(x, 2).unwrap())
     .collect::<Vec<_>>();
 
-  input_puzzle.sort();
-
   let mut gamma = 0;
   for i in 0..line_length as u32 {
     gamma += get_rule(&input_puzzle, i) << i;
   }
-  let epsilon = (1 << line_length)-1 & !gamma;
+  let epsilon = (1 << line_length) - 1 & !gamma;
 
   *part1 = (gamma * epsilon) as u64;
 
