@@ -74,9 +74,9 @@ RegisterCommand day03("day03", {
     // part1
     uint64_t gammaRate = 0;
     for (size_t i = 0, shift = lineLength -1; i < lineLength; ++i, --shift) {
-      gammaRate += (occurenceOf0[i] > inputPuzzle.size()/2 ? 0 : 1) << shift;
+      gammaRate += occurenceOf0[i] > inputPuzzle.size()/2 ? 0 : (1 << shift) ;
     }
-    const uint64_t epsilonRate = (1<<lineLength)-1 & ~gammaRate;
+    const uint64_t epsilonRate = (1 << lineLength)-1 & ~gammaRate;
 
     const uint64_t part1Result = gammaRate * epsilonRate;
 
@@ -92,5 +92,10 @@ RegisterCommand day03("day03", {
     return {part1Result, part2Result};
 });
 
+
+RegisterRustCommand day03rustfunctional("day03,rust,functional", {
+    { "input_day03.txt",       3429254,   5410338},
+    { "input_day03_test1.txt", 198,       230},
+  }, rust::day03functional);
 
 } // namespace aoc

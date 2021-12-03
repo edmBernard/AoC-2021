@@ -1,6 +1,5 @@
 use cxx::CxxString;
 
-use std::convert::TryFrom;
 use std::io::{BufReader, BufRead};
 
 pub fn day01(filename: &CxxString, part1: &mut u64, part2: &mut u64) {
@@ -43,20 +42,17 @@ pub fn day01functional(filename: &CxxString, part1: &mut u64, part2: &mut u64) {
     .collect::<Vec<_>>();
 
   // part1
-  let result = input_puzzle.windows(2)
+  *part1 = input_puzzle.windows(2)
   .filter(|pair| pair[0] < pair[1])
-  .count();
-
-  *part1 = u64::try_from(result).unwrap();
+  .count() as u64;
 
   // part2
-  let result = input_puzzle
+  *part2 = input_puzzle
     .windows(3)
     .map(|triplet| triplet.into_iter().sum())
     .collect::<Vec<u16>>()
     .windows(2)
     .filter(|pair| pair[0] < pair[1])
-    .count();
+    .count() as u64;
 
-  *part2 = u64::try_from(result).unwrap();
 }

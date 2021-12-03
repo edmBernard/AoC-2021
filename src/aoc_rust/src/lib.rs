@@ -1,9 +1,11 @@
 mod day01;
 mod day02;
+mod day03;
 
 use crate::day01::day01;
 use crate::day01::day01functional;
 use crate::day02::day02functional;
+use crate::day03::day03functional;
 
 #[cxx::bridge(namespace = "aoc::rust")]
 mod ffi {
@@ -14,5 +16,6 @@ mod ffi {
     fn day01(filename: &CxxString, part1: &mut u64, part2: &mut u64);
     fn day01functional(filename: &CxxString, part1: &mut u64, part2: &mut u64);
     fn day02functional(filename: &CxxString, part1: &mut u64, part2: &mut u64);
+    fn day03functional(filename: &CxxString, part1: &mut u64, part2: &mut u64);
   }
 }
