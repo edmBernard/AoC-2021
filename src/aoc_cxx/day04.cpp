@@ -93,16 +93,18 @@ bool detectWin(const std::array<bool, Dim*Dim> &mark) {
 }
 
 template <int Dim>
-void updateBoard(const std::array<uint16_t, Dim*Dim> &board, std::array<bool, Dim*Dim> &mark, uint16_t draw) {
-  auto pos = board.begin();
-  while (true) {
-    pos = std::find(pos, board.end(), draw);
-    if (pos == board.end())
-      break;
-    const size_t index = pos - board.begin();
-    mark[index] = true;
-    ++pos;
-  }
+bool updateBoard(const std::array<uint16_t, Dim*Dim> &board,
+                 std::array<bool, Dim*Dim> &mark,
+                 std::array<uint8_t, Dim>& countColumns,
+                 std::array<uint8_t, Dim>& countRows,
+                 uint16_t draw) {
+  auto pos = std::find(board.begin(), board.end(), draw);
+  if (pos == board.end())
+    return false;
+  const size_t index = pos - board.begin();
+  mark[index] = true;
+  // increment columns count before check winner
+  return ++countRows[index / Dim] == Dim || ++countColumns[index % Dim] == Dim;
 }
 
 template <int Dim>
@@ -157,6 +159,8 @@ RegisterCommand day04("day04", {
     }
 
     std::vector<std::array<bool, dim*dim>> mark(boards.size(), {0});
+    std::vector<std::array<uint8_t, dim>> countColumns(boards.size(), {0});
+    std::vector<std::array<uint8_t, dim>> countRows(boards.size(), {0});
     std::vector<uint8_t> boardsThatWin(boards.size(), 0);
     uint64_t firstWinScore = 0;
     uint64_t lastWinScore = 0;
@@ -168,9 +172,7 @@ RegisterCommand day04("day04", {
           continue;
 
         // update mark in function of the drawn number
-        updateBoard<dim>(boards[i], mark[i], draw);
-
-        const bool hasCompleted = detectWin<dim>(mark[i]);
+        const bool hasCompleted = updateBoard<dim>(boards[i], mark[i], countColumns[i], countRows[i], draw);
 
         // if the board win compute the score
         if (hasCompleted) {
