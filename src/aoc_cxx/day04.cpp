@@ -11,6 +11,7 @@
 #include <sstream>
 #include <tuple>
 #include <vector>
+#include <algorithm>
 
 namespace aoc {
 
@@ -85,8 +86,8 @@ void updateBoard(const std::array<uint16_t, Dim*Dim> &board, std::array<uint8_t,
 } // namespace
 
 RegisterCommand day04("day04", {
-    { "input_day04.txt",       3429254,   5410338},
-    { "input_day04_test1.txt", 4512,       230},
+    { "input_day04.txt",       38913,   16836},
+    { "input_day04_test1.txt", 4512,    1924},
   }, [](fs::path filename) -> std::tuple<uint64_t, uint64_t> {
 
     std::ifstream infile(filename);
@@ -123,10 +124,16 @@ RegisterCommand day04("day04", {
     }
 
     std::vector<std::array<uint8_t, dim*dim>> mark(boards.size(), {0});
+    std::vector<uint8_t> boardsThatWin(boards.size(), 0);
+    uint64_t firstWinScore = 0;
+    uint64_t lastWinScore = 0;
 
     for (auto& draw : numbersDrawn) {
       spdlog::debug("draw:{}", draw);
       for (size_t i = 0; i < boards.size(); ++i) {
+        // skip board that already win
+        if (boardsThatWin[i] == 1)
+          continue;
         updateBoard<dim>(boards[i], mark[i], draw);
 
         bool hasCompleted = false;
@@ -142,6 +149,7 @@ RegisterCommand day04("day04", {
         }
 
         if (hasCompleted) {
+          boardsThatWin[i] = 1;
           uint64_t sumMarked = 0;
           for (size_t index = 0; index < boards[i].size(); ++index) {
             if (mark[i][index] != 1) {
@@ -149,13 +157,16 @@ RegisterCommand day04("day04", {
             }
             spdlog::debug("board={} mark={}", boards[i][index], mark[i][index]);
           }
-          spdlog::debug("sum marked = {}", sumMarked);
-          spdlog::debug("res Part1 = {}", sumMarked * draw);
-
-          return {sumMarked * draw, 0};
+          if (firstWinScore == 0)
+            firstWinScore = sumMarked * draw;
+          lastWinScore = sumMarked * draw;
         }
+
+        if (std::accumulate(boardsThatWin.begin(), boardsThatWin.end(), 0) == boards.size())
+          return {firstWinScore, lastWinScore};
       }
     }
+
     return {0, 0};
 });
 
