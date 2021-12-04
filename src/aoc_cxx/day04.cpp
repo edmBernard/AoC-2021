@@ -49,25 +49,49 @@ inline std::vector<T> parse(const std::vector<std::string> &input, int base = 10
 }
 
 template <int Dim>
-std::array<uint64_t, Dim> countOnRow(const std::array<uint8_t, Dim*Dim> &mark) {
-  std::array<uint64_t, Dim> counts{0};
+bool countOnRow(const std::array<uint8_t, Dim*Dim> &mark) {
+  std::array<uint8_t, Dim> counts{0};
   for (size_t row = 0; row < Dim; ++row) {
     for (size_t col = 0; col < Dim; ++col) {
       counts[row] += mark[row * Dim + col];
     }
+    if (counts[row] == Dim)
+      return true;
+  }
+  return false;
+}
+
+template <int Dim>
+bool countOnColumn(const std::array<uint8_t, Dim*Dim> &mark) {
+  std::array<uint8_t, Dim> counts{0};
+  for (size_t col = 0; col < Dim; ++col) {
+    for (size_t row = 0; row < Dim; ++row) {
+      counts[col] += mark[row * Dim + col];
+    }
+    if (counts[col] == Dim)
+      return true;
   }
   return counts;
 }
 
 template <int Dim>
-std::array<uint64_t, Dim> countOnColumn(const std::array<uint8_t, Dim*Dim> &mark) {
-  std::array<uint64_t, Dim> counts{0};
+bool detectWin(const std::array<uint8_t, Dim*Dim> &mark) {
+  std::array<uint8_t, Dim> countsRow{0};
+  std::array<uint8_t, Dim> countsCol{0};
   for (size_t row = 0; row < Dim; ++row) {
     for (size_t col = 0; col < Dim; ++col) {
-      counts[col] += mark[row * Dim + col];
+      const uint8_t value = mark[row * Dim + col];
+      countsCol[col] += value;
+      countsRow[row] += value;
+      // check if win on last row only
+      if (row == Dim - 1 && countsCol[col] == Dim)
+        return true;
     }
+    // check if win on last col
+    if (countsRow[row] == Dim)
+      return true;
   }
-  return counts;
+  return false;
 }
 
 template <int Dim>
@@ -148,18 +172,7 @@ RegisterCommand day04("day04", {
         // update mark in function of the drawn number
         updateBoard<dim>(boards[i], mark[i], draw);
 
-        // check if the current board win
-        bool hasCompleted = false;
-        const std::array<uint64_t, dim> colCount = countOnColumn<dim>(mark[i]);
-        for (auto& j : colCount) {
-          if (j == dim)
-            hasCompleted = true;
-        }
-        const std::array<uint64_t, dim> rowCount = countOnRow<dim>(mark[i]);
-        for (auto& j : rowCount) {
-          if (j == dim)
-            hasCompleted = true;
-        }
+        const bool hasCompleted = detectWin<dim>(mark[i]);
 
         // if the board win compute the score
         if (hasCompleted) {
