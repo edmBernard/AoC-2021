@@ -1,8 +1,8 @@
 use cxx::CxxString;
 
 fn get_rule(input: &[u32], index: u32) -> u32 {
-  let counts = input.iter().filter(|x| (x.clone() & (1 << index)) != 0).count() as u32;
-  if counts > (input.len() >> 1) as u32 { 1 } else { 0 }
+  let counts = input.iter().filter(|x| (x.clone() >> index) & 1 != 0).count() as u32;
+  if counts >= input.len() as u32 - counts { 1 } else { 0 }
 }
 
 fn tree_decent(input: &[u32], line_length : u32, option : bool) -> u32 {

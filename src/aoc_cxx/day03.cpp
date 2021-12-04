@@ -76,7 +76,7 @@ RegisterCommand day03("day03", {
     // part1
     uint64_t gammaRate = 0;
     for (size_t i = 0, shift = lineLength -1; i < lineLength; ++i, --shift) {
-      gammaRate += occurenceOf0[i] > (inputPuzzle.size() >> 1) ? 0 : (1 << shift) ;
+      gammaRate += occurenceOf0[i] >= (inputPuzzle.size() - occurenceOf0[i]) ? 0 : (1 << shift);
     }
     const uint64_t epsilonRate = (1 << lineLength) - 1 & ~gammaRate;
 
