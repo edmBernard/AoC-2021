@@ -17,11 +17,12 @@ namespace fs = std::filesystem;
 namespace rs = ranges;
 namespace rv = ranges::views;
 
+namespace {
 uint64_t treeDescent(const std::vector<uint16_t> &inputPuzzle, size_t lineLength, bool option) {
   auto begin = inputPuzzle.begin();
   auto end = inputPuzzle.end();
   // We reduce the search at each iteration by moving begin and end of the search
-  for (size_t i = 0, shift = lineLength -1; i < lineLength; ++i, --shift) {
+  for (size_t i = 0, shift = lineLength - 1; i < lineLength; ++i, --shift) {
     auto pos = std::find_if(begin, end, [&](auto value) { return (value >> shift) & 1; });
     if (pos != end) {
       if ((pos - begin <= end - pos) ^ option) {
@@ -35,6 +36,7 @@ uint64_t treeDescent(const std::vector<uint16_t> &inputPuzzle, size_t lineLength
   }
   return *begin;
 }
+} // namespace
 
 RegisterCommand day03("day03", {
     { "input_day03.txt",       3429254,   5410338},
