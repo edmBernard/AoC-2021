@@ -83,6 +83,17 @@ void updateBoard(const std::array<uint16_t, Dim*Dim> &board, std::array<uint8_t,
   }
 }
 
+template <int Dim>
+uint64_t getSum(const std::array<uint16_t, Dim*Dim> &board, std::array<uint8_t, Dim*Dim> &mark, uint16_t draw) {
+  uint64_t sumMarked = 0;
+  for (size_t index = 0; index < board.size(); ++index) {
+    if (mark[index] != 1) {
+      sumMarked += board[index];
+    }
+  }
+  return sumMarked * draw;
+}
+
 } // namespace
 
 RegisterCommand day04("day04", {
@@ -129,7 +140,6 @@ RegisterCommand day04("day04", {
     uint64_t lastWinScore = 0;
 
     for (auto& draw : numbersDrawn) {
-      spdlog::debug("draw:{}", draw);
       for (size_t i = 0; i < boards.size(); ++i) {
         // skip board that already win
         if (boardsThatWin[i] == 1)
@@ -154,21 +164,14 @@ RegisterCommand day04("day04", {
         // if the board win compute the score
         if (hasCompleted) {
           boardsThatWin[i] = 1;
-          uint64_t sumMarked = 0;
-          for (size_t index = 0; index < boards[i].size(); ++index) {
-            if (mark[i][index] != 1) {
-              sumMarked += boards[i][index];
-            }
-            spdlog::debug("board={} mark={}", boards[i][index], mark[i][index]);
-          }
-          if (firstWinScore == 0)
-            firstWinScore = sumMarked * draw;
-          lastWinScore = sumMarked * draw;
-        }
 
-        // check if it's the last winner
-        if (std::accumulate(boardsThatWin.begin(), boardsThatWin.end(), 0) == boards.size())
-          return {firstWinScore, lastWinScore};
+          if (firstWinScore == 0) {
+            firstWinScore = getSum<dim>(boards[i], mark[i], draw);
+          } else if (std::accumulate(boardsThatWin.begin(), boardsThatWin.end(), 0) == boards.size()) {
+            // check if it's the last winner we can't be first and last winner
+            return {firstWinScore, getSum<dim>(boards[i], mark[i], draw)};
+          }
+        }
       }
     }
 
