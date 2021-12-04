@@ -134,8 +134,11 @@ RegisterCommand day04("day04", {
         // skip board that already win
         if (boardsThatWin[i] == 1)
           continue;
+
+        // update mark in function of the drawn number
         updateBoard<dim>(boards[i], mark[i], draw);
 
+        // check if the current board win
         bool hasCompleted = false;
         const std::array<uint64_t, dim> colCount = countOnColumn<dim>(mark[i]);
         for (auto& j : colCount) {
@@ -148,6 +151,7 @@ RegisterCommand day04("day04", {
             hasCompleted = true;
         }
 
+        // if the board win compute the score
         if (hasCompleted) {
           boardsThatWin[i] = 1;
           uint64_t sumMarked = 0;
@@ -162,6 +166,7 @@ RegisterCommand day04("day04", {
           lastWinScore = sumMarked * draw;
         }
 
+        // check if it's the last winner
         if (std::accumulate(boardsThatWin.begin(), boardsThatWin.end(), 0) == boards.size())
           return {firstWinScore, lastWinScore};
       }
