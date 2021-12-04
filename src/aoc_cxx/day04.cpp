@@ -12,6 +12,7 @@
 #include <tuple>
 #include <vector>
 #include <algorithm>
+#include <numeric>
 
 namespace aoc {
 
@@ -96,13 +97,16 @@ template <int Dim>
 bool updateBoard(const std::array<uint16_t, Dim*Dim> &board, std::array<bool, Dim*Dim> &mark,
                  std::array<uint8_t, Dim>& countColumns, std::array<uint8_t, Dim>& countRows,
                  uint16_t draw) {
-  auto pos = std::find(board.begin(), board.end(), draw);
-  if (pos == board.end())
-    return false;
-  const size_t index = pos - board.begin();
-  mark[index] = true;
-  // increment columns count before check winner
-  return ++countRows[index / Dim] == Dim || ++countColumns[index % Dim] == Dim;
+  for (size_t row = 0; row < Dim; ++row) {
+    for (size_t col = 0; col < Dim; ++col) {
+      if (board[row * Dim + col] == draw) {
+        mark[row * Dim + col] = true;
+        // increment columns count before check winner
+        return ++countRows[row] == Dim || ++countColumns[col] == Dim;
+      }
+    }
+  }
+  return false;
 }
 
 template <int Dim>
