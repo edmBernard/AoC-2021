@@ -93,10 +93,8 @@ bool detectWin(const std::array<bool, Dim*Dim> &mark) {
 }
 
 template <int Dim>
-bool updateBoard(const std::array<uint16_t, Dim*Dim> &board,
-                 std::array<bool, Dim*Dim> &mark,
-                 std::array<uint8_t, Dim>& countColumns,
-                 std::array<uint8_t, Dim>& countRows,
+bool updateBoard(const std::array<uint16_t, Dim*Dim> &board, std::array<bool, Dim*Dim> &mark,
+                 std::array<uint8_t, Dim>& countColumns, std::array<uint8_t, Dim>& countRows,
                  uint16_t draw) {
   auto pos = std::find(board.begin(), board.end(), draw);
   if (pos == board.end())
@@ -158,11 +156,17 @@ RegisterCommand day04("day04", {
       }
     }
 
+    // list of status if position is marked
     std::vector<std::array<bool, dim*dim>> mark(boards.size(), {0});
+    // count per columns for each board
     std::vector<std::array<uint8_t, dim>> countColumns(boards.size(), {0});
+    // count per row for each board
     std::vector<std::array<uint8_t, dim>> countRows(boards.size(), {0});
+    // list of board that win the skip them during computation
     std::vector<uint8_t> boardsThatWin(boards.size(), 0);
+    // score of the first win board
     uint64_t firstWinScore = 0;
+    // score of the last win board
     uint64_t lastWinScore = 0;
 
     for (auto& draw : numbersDrawn) {
