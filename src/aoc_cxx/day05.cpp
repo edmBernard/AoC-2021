@@ -68,6 +68,19 @@ void showVect(const std::array<T, Dim> &mark) {
   fmt::print("\n");
 }
 
+// function that increment the board and increment the counter if needed
+template<uint8_t Mask, uint8_t Unity>
+void increment(uint8_t& elem, uint64_t& count) {
+  switch (elem & Mask) {
+    case Unity:
+      ++count;
+    case 0b0000'0000:
+      elem += Unity;
+      break;
+    default:
+      break;
+  }
+}
 
 } // namespace
 
@@ -102,60 +115,28 @@ RegisterCommand day05("day05", {
     // X X X X Y Y Y Y
     //| part2 | part1 |
     constexpr uint8_t maskPart1 = 0b0000'1111;
+    constexpr uint8_t unityPart1 = 0b0000'0001;
     constexpr uint8_t maskPart2 = 0b1111'0000;
+    constexpr uint8_t unityPart2 = 0b0001'0000;
+
     std::vector<uint8_t> board(dim*dim, 0);
     uint64_t countPart1 = 0;
     uint64_t countPart2 = 0;
+
     for (auto& [x1, y1, x2, y2] : inputPuzzle) {
       if (x1 == x2) {
         // vertical line
         for (size_t y = std::min(y1, y2); y <= std::max(y1, y2); ++y) {
           auto& elem = board[y * dim + x1];
-          switch (elem & maskPart1) {
-            case 0b0000'0001:
-              ++countPart1;
-              [[fallthrough]]
-            case 0b0000'0000:
-              elem += 0b0000'0001;
-              break;
-            default:
-              break;
-          }
-          switch (elem & maskPart2) {
-            case 0b0001'0000:
-              ++countPart2;
-              [[fallthrough]]
-            case 0b0000'0000:
-              elem += 0b0001'0000;
-              break;
-            default:
-              break;
-          }
+          increment<maskPart1, unityPart1>(elem, countPart1);
+          increment<maskPart2, unityPart2>(elem, countPart2);
         }
       } else if (y1 == y2) {
         // horizontal line
         for (size_t x = std::min(x1, x2); x <= std::max(x1, x2); ++x) {
           auto& elem = board[y1 * dim + x];
-          switch (elem & maskPart1) {
-            case 0b0000'0001:
-              ++countPart1;
-              [[fallthrough]]
-            case 0b0000'0000:
-              elem += 0b0000'0001;
-              break;
-            default:
-              break;
-          }
-          switch (elem & maskPart2) {
-            case 0b0001'0000:
-              ++countPart2;
-              [[fallthrough]]
-            case 0b0000'0000:
-              elem += 0b0001'0000;
-              break;
-            default:
-              break;
-          }
+          increment<maskPart1, unityPart1>(elem, countPart1);
+          increment<maskPart2, unityPart2>(elem, countPart2);
         }
       } else {
         // We separate these case for an easy end condition
@@ -164,32 +145,14 @@ RegisterCommand day05("day05", {
           const int16_t stepY = (y1 < y2) - (y1 > y2);
           for (int16_t x = x1, y = y1; x <= x2; x += stepX, y += stepY) {
             auto& elem = board[y * dim + x];
-            switch (elem & maskPart2) {
-              case 0b0001'0000:
-                ++countPart2;
-                [[fallthrough]]
-              case 0b0000'0000:
-                elem += 0b0001'0000;
-                break;
-              default:
-                break;
-            }
+            increment<maskPart2, unityPart2>(elem, countPart2);
           }
         } else {
           const int16_t stepX = -1;
           const int16_t stepY = (y1 < y2) - (y1 > y2);
           for (int16_t x = x1, y = y1; x >= x2; x += stepX, y += stepY) {
             auto& elem = board[y * dim + x];
-            switch (elem & maskPart2) {
-              case 0b0001'0000:
-                ++countPart2;
-                [[fallthrough]]
-              case 0b0000'0000:
-                elem += 0b0001'0000;
-                break;
-              default:
-                break;
-            }
+            increment<maskPart2, unityPart2>(elem, countPart2);
           }
         }
       }
