@@ -73,7 +73,7 @@ void showVect(const std::array<T, Dim> &mark) {
 
 RegisterCommand day05("day05", {
     { "input_day05.txt",       7380,  16836},
-    { "input_day05_test1.txt", 5,     1924},
+    { "input_day05_test1.txt", 5,     12},
   }, [](fs::path filename) -> std::tuple<uint64_t, uint64_t> {
 
     std::ifstream infile(filename);
@@ -95,23 +95,43 @@ RegisterCommand day05("day05", {
     }
 
     constexpr uint16_t dim = 1000;
-    std::vector<uint16_t> board(dim*dim, 0);
+    std::vector<uint16_t> boardPart1(dim*dim, 0);
+    std::vector<uint16_t> boardPart2(dim*dim, 0);
     for (auto& [x1, y1, x2, y2] : inputPuzzle) {
       if (x1 == x2) {
-        for (size_t i = std::min(y1, y2); i <= std::max(y1, y2); ++i) {
-          board[i * dim + x1] += 1;
+        for (size_t y = std::min(y1, y2); y <= std::max(y1, y2); ++y) {
+          boardPart1[y * dim + x1] += 1;
+          boardPart2[y * dim + x1] += 1;
         }
-      }
-      if (y1 == y2) {
-        for (size_t i = std::min(x1, x2); i <= std::max(x1, x2); ++i) {
-          board[y1 * dim + i] += 1;
+      } else if (y1 == y2) {
+        for (size_t x = std::min(x1, x2); x <= std::max(x1, x2); ++x) {
+          boardPart1[y1 * dim + x] += 1;
+          boardPart2[y1 * dim + x] += 1;
+        }
+      } else {
+        if (x1 < x2) {
+          const int16_t stepX = 1;
+          const int16_t stepY = (y1 < y2) - (y1 > y2);
+          // spdlog::debug("x1={} y1={} x2={} y2={} stepX={} stepY={}", x1, y1, x2, y2, stepX, stepY);
+          for (int16_t x = x1, y = y1; x <= x2; x += stepX, y += stepY) {
+            boardPart2[y * dim + x] += 1;
+          }
+        } else {
+          const int16_t stepX = -1;
+          const int16_t stepY = (y1 < y2) - (y1 > y2);
+          // spdlog::debug("x1={} y1={} x2={} y2={} stepX={} stepY={}", x1, y1, x2, y2, stepX, stepY);
+          for (int16_t x = x1, y = y1; x >= x2; x += stepX, y += stepY) {
+            boardPart2[y * dim + x] += 1;
+          }
         }
       }
     }
-    const uint64_t countPart1 = std::count_if(board.begin(), board.end(), [](auto x){ return x > 1; });
+    const uint64_t countPart1 = std::count_if(boardPart1.begin(), boardPart1.end(), [](auto x){ return x > 1; });
+    const uint64_t countPart2 = std::count_if(boardPart2.begin(), boardPart2.end(), [](auto x){ return x > 1; });
 
-    // showBoard<dim>(board);
-    return {countPart1, 0};
+    // showBoard<dim>(boardPart1);
+    // showBoard<dim>(boardPart2);
+    return {countPart1, countPart2};
 });
 
 
