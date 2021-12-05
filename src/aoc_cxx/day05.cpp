@@ -111,34 +111,50 @@ RegisterCommand day05("day05", {
         // vertical line
         for (size_t y = std::min(y1, y2); y <= std::max(y1, y2); ++y) {
           auto& elem = board[y * dim + x1];
-          if ((elem & maskPart1) == 0) {
-            elem += 0b0000'0001;
-          } else if ((elem & maskPart1) == 0b0000'0001) {
-            ++countPart1;
-            elem += 0b0000'0001;
+          switch (elem & maskPart1) {
+            case 0b0000'0001:
+              ++countPart1;
+              [[fallthrough]]
+            case 0b0000'0000:
+              elem += 0b0000'0001;
+              break;
+            default:
+              break;
           }
-          if ((elem & maskPart2) == 0) {
-            elem += 0b0001'0000;
-          } else if ((elem & maskPart2) == 0b0001'0000) {
-            ++countPart2;
-            elem += 0b0001'0000;
+          switch (elem & maskPart2) {
+            case 0b0001'0000:
+              ++countPart2;
+              [[fallthrough]]
+            case 0b0000'0000:
+              elem += 0b0001'0000;
+              break;
+            default:
+              break;
           }
         }
       } else if (y1 == y2) {
         // horizontal line
         for (size_t x = std::min(x1, x2); x <= std::max(x1, x2); ++x) {
           auto& elem = board[y1 * dim + x];
-          if ((elem & maskPart1) == 0) {
-            elem += 0b0000'0001;
-          } else if ((elem & maskPart1) == 0b0000'0001) {
-            ++countPart1;
-            elem += 0b0000'0001;
+          switch (elem & maskPart1) {
+            case 0b0000'0001:
+              ++countPart1;
+              [[fallthrough]]
+            case 0b0000'0000:
+              elem += 0b0000'0001;
+              break;
+            default:
+              break;
           }
-          if ((elem & maskPart2) == 0) {
-            elem += 0b0001'0000;
-          } else if ((elem & maskPart2) == 0b0001'0000) {
-            ++countPart2;
-            elem += 0b0001'0000;
+          switch (elem & maskPart2) {
+            case 0b0001'0000:
+              ++countPart2;
+              [[fallthrough]]
+            case 0b0000'0000:
+              elem += 0b0001'0000;
+              break;
+            default:
+              break;
           }
         }
       } else {
@@ -148,11 +164,15 @@ RegisterCommand day05("day05", {
           const int16_t stepY = (y1 < y2) - (y1 > y2);
           for (int16_t x = x1, y = y1; x <= x2; x += stepX, y += stepY) {
             auto& elem = board[y * dim + x];
-            if ((elem & maskPart2) == 0) {
-              elem += 0b0001'0000;
-            } else if ((elem & maskPart2) == 0b0001'0000) {
-              ++countPart2;
-              elem += 0b0001'0000;
+            switch (elem & maskPart2) {
+              case 0b0001'0000:
+                ++countPart2;
+                [[fallthrough]]
+              case 0b0000'0000:
+                elem += 0b0001'0000;
+                break;
+              default:
+                break;
             }
           }
         } else {
@@ -160,11 +180,15 @@ RegisterCommand day05("day05", {
           const int16_t stepY = (y1 < y2) - (y1 > y2);
           for (int16_t x = x1, y = y1; x >= x2; x += stepX, y += stepY) {
             auto& elem = board[y * dim + x];
-            if ((elem & maskPart2) == 0) {
-              elem += 0b0001'0000;
-            } else if ((elem & maskPart2) == 0b0001'0000) {
-              ++countPart2;
-              elem += 0b0001'0000;
+            switch (elem & maskPart2) {
+              case 0b0001'0000:
+                ++countPart2;
+                [[fallthrough]]
+              case 0b0000'0000:
+                elem += 0b0001'0000;
+                break;
+              default:
+                break;
             }
           }
         }
