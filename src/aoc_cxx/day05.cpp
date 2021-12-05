@@ -96,36 +96,50 @@ RegisterCommand day05("day05", {
     }
 
     constexpr uint16_t dim = 1000;
-    // We are currently limited in speed by the allocation of these boards
+    // We are currently limited in speed by the allocation of these/this boards
     // unfortunately std::map are even slower
-    std::vector<uint8_t> boardPart1(dim*dim, 0);
-    std::vector<uint8_t> boardPart2(dim*dim, 0);
+    // we need 3 states by part (0, 1, 2+) so we encode these states for both part in 8bits
+    // X X X X Y Y Y Y
+    //| part2 | part1 |
+    constexpr uint8_t maskPart1 = 0b0000'1111;
+    constexpr uint8_t maskPart2 = 0b1111'0000;
+    std::vector<uint8_t> board(dim*dim, 0);
     uint64_t countPart1 = 0;
     uint64_t countPart2 = 0;
     for (auto& [x1, y1, x2, y2] : inputPuzzle) {
       if (x1 == x2) {
         // vertical line
         for (size_t y = std::min(y1, y2); y <= std::max(y1, y2); ++y) {
-          if (boardPart1[y * dim + x1] == 1) {
+          auto& elem = board[y * dim + x1];
+          if ((elem & maskPart1) == 0) {
+            elem += 0b0000'0001;
+          } else if ((elem & maskPart1) == 0b0000'0001) {
             ++countPart1;
+            elem += 0b0000'0001;
           }
-          boardPart1[y * dim + x1] += 1;
-          if (boardPart2[y * dim + x1] == 1) {
+          if ((elem & maskPart2) == 0) {
+            elem += 0b0001'0000;
+          } else if ((elem & maskPart2) == 0b0001'0000) {
             ++countPart2;
+            elem += 0b0001'0000;
           }
-          boardPart2[y * dim + x1] += 1;
         }
       } else if (y1 == y2) {
         // horizontal line
         for (size_t x = std::min(x1, x2); x <= std::max(x1, x2); ++x) {
-          if (boardPart1[y1 * dim + x] == 1) {
+          auto& elem = board[y1 * dim + x];
+          if ((elem & maskPart1) == 0) {
+            elem += 0b0000'0001;
+          } else if ((elem & maskPart1) == 0b0000'0001) {
             ++countPart1;
+            elem += 0b0000'0001;
           }
-          boardPart1[y1 * dim + x] += 1;
-          if (boardPart2[y1 * dim + x] == 1) {
+          if ((elem & maskPart2) == 0) {
+            elem += 0b0001'0000;
+          } else if ((elem & maskPart2) == 0b0001'0000) {
             ++countPart2;
+            elem += 0b0001'0000;
           }
-          boardPart2[y1 * dim + x] += 1;
         }
       } else {
         // We separate these case for an easy end condition
@@ -133,19 +147,25 @@ RegisterCommand day05("day05", {
           const int16_t stepX = 1;
           const int16_t stepY = (y1 < y2) - (y1 > y2);
           for (int16_t x = x1, y = y1; x <= x2; x += stepX, y += stepY) {
-            if (boardPart2[y * dim + x] == 1) {
+            auto& elem = board[y * dim + x];
+            if ((elem & maskPart2) == 0) {
+              elem += 0b0001'0000;
+            } else if ((elem & maskPart2) == 0b0001'0000) {
               ++countPart2;
+              elem += 0b0001'0000;
             }
-            boardPart2[y * dim + x] += 1;
           }
         } else {
           const int16_t stepX = -1;
           const int16_t stepY = (y1 < y2) - (y1 > y2);
           for (int16_t x = x1, y = y1; x >= x2; x += stepX, y += stepY) {
-            if (boardPart2[y * dim + x] == 1) {
+            auto& elem = board[y * dim + x];
+            if ((elem & maskPart2) == 0) {
+              elem += 0b0001'0000;
+            } else if ((elem & maskPart2) == 0b0001'0000) {
               ++countPart2;
+              elem += 0b0001'0000;
             }
-            boardPart2[y * dim + x] += 1;
           }
         }
       }
