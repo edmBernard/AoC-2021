@@ -98,8 +98,8 @@ RegisterCommand day05("day05", {
     constexpr uint16_t dim = 1000;
     // We are currently limited in speed by the allocation of these boards
     // unfortunately std::map are even slower
-    std::vector<uint16_t> boardPart1(dim*dim, 0);
-    std::vector<uint16_t> boardPart2(dim*dim, 0);
+    std::vector<uint8_t> boardPart1(dim*dim, 0);
+    std::vector<uint8_t> boardPart2(dim*dim, 0);
     uint64_t countPart1 = 0;
     uint64_t countPart2 = 0;
     for (auto& [x1, y1, x2, y2] : inputPuzzle) {
