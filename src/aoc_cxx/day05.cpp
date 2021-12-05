@@ -71,6 +71,7 @@ void showVect(const std::array<T, Dim> &mark) {
 
 } // namespace
 
+
 RegisterCommand day05("day05", {
     { "input_day05.txt",       7380,  21373},
     { "input_day05_test1.txt", 5,     12},
@@ -97,40 +98,56 @@ RegisterCommand day05("day05", {
     constexpr uint16_t dim = 1000;
     std::vector<uint16_t> boardPart1(dim*dim, 0);
     std::vector<uint16_t> boardPart2(dim*dim, 0);
+    uint64_t countPart1 = 0;
+    uint64_t countPart2 = 0;
     for (auto& [x1, y1, x2, y2] : inputPuzzle) {
       if (x1 == x2) {
+        // vertical line
         for (size_t y = std::min(y1, y2); y <= std::max(y1, y2); ++y) {
+          if (boardPart1[y * dim + x1] == 1) {
+            ++countPart1;
+          }
           boardPart1[y * dim + x1] += 1;
+          if (boardPart2[y * dim + x1] == 1) {
+            ++countPart2;
+          }
           boardPart2[y * dim + x1] += 1;
         }
       } else if (y1 == y2) {
+        // horizontal line
         for (size_t x = std::min(x1, x2); x <= std::max(x1, x2); ++x) {
+          if (boardPart1[y1 * dim + x] == 1) {
+            ++countPart1;
+          }
           boardPart1[y1 * dim + x] += 1;
+          if (boardPart2[y1 * dim + x] == 1) {
+            ++countPart2;
+          }
           boardPart2[y1 * dim + x] += 1;
         }
       } else {
+        // We separate these case for an easy end condition
         if (x1 < x2) {
           const int16_t stepX = 1;
           const int16_t stepY = (y1 < y2) - (y1 > y2);
-          // spdlog::debug("x1={} y1={} x2={} y2={} stepX={} stepY={}", x1, y1, x2, y2, stepX, stepY);
           for (int16_t x = x1, y = y1; x <= x2; x += stepX, y += stepY) {
+            if (boardPart2[y * dim + x] == 1) {
+              ++countPart2;
+            }
             boardPart2[y * dim + x] += 1;
           }
         } else {
           const int16_t stepX = -1;
           const int16_t stepY = (y1 < y2) - (y1 > y2);
-          // spdlog::debug("x1={} y1={} x2={} y2={} stepX={} stepY={}", x1, y1, x2, y2, stepX, stepY);
           for (int16_t x = x1, y = y1; x >= x2; x += stepX, y += stepY) {
+            if (boardPart2[y * dim + x] == 1) {
+              ++countPart2;
+            }
             boardPart2[y * dim + x] += 1;
           }
         }
       }
     }
-    const uint64_t countPart1 = std::count_if(boardPart1.begin(), boardPart1.end(), [](auto x){ return x > 1; });
-    const uint64_t countPart2 = std::count_if(boardPart2.begin(), boardPart2.end(), [](auto x){ return x > 1; });
-
-    // showBoard<dim>(boardPart1);
-    // showBoard<dim>(boardPart2);
     return {countPart1, countPart2};
 });
 
