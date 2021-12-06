@@ -68,12 +68,38 @@ void showVect(const std::vector<T> &mark) {
   fmt::print("\n");
 }
 
+std::vector<uint8_t> getFinalPopulation(uint8_t initial, uint16_t epoch) {
+  std::vector<uint8_t> population{initial};
+  for (uint16_t i = 0; i < epoch; ++i) {
+    uint64_t toAdd = 0;
+    std::transform(population.begin(), population.end(), population.begin(), [&toAdd](auto x) {
+        toAdd += (x == 0);
+        return x == 0 ? 6 : x - 1;
+      });
+    population.resize(population.size() + toAdd, 8);  // C++20
+  }
+  return population;
+}
+
+uint64_t getCountPopulation(uint8_t initial, uint16_t epoch) {
+  std::vector<uint8_t> population{initial};
+  for (uint16_t i = 0; i < epoch; ++i) {
+    uint64_t toAdd = 0;
+    std::transform(population.begin(), population.end(), population.begin(), [&toAdd](auto x) {
+        toAdd += (x == 0);
+        return x == 0 ? 6 : x - 1;
+      });
+    population.resize(population.size() + toAdd, 8);  // C++20
+  }
+  return population.size();
+}
+
 } // namespace
 
 
 RegisterCommand day06("day06", {
-    { "input_day06.txt",       345793,  21373},
-    { "input_day06_test1.txt", 5934,     12},
+    { "input_day06.txt",       345793,  1572643095893},
+    { "input_day06_test1.txt", 5934,    26984457539},
   }, [](fs::path filename) -> std::tuple<uint64_t, uint64_t> {
 
     std::ifstream infile(filename);
@@ -88,18 +114,33 @@ RegisterCommand day06("day06", {
       population = parse<uint8_t>(split(line, ','));
     }
 
-    const uint8_t numberDay = 80;
-    for (uint8_t i = 0; i < numberDay; ++i) {
-      uint64_t toAdd = 0;
-      std::transform(population.begin(), population.end(), population.begin(), [&toAdd](auto x) {
-          toAdd += (x == 0);
-          return x == 0 ? 6 : x - 1;
-        });
-      population.resize(population.size() + toAdd, 8);  // C++20
-      // showVect(population);
+
+    // part1
+    std::vector<uint64_t> preComputeCountPart1Step80;
+    for (int i = 0; i <=8; ++i) {
+      preComputeCountPart1Step80.push_back(getCountPopulation(i, 80));
+    }
+    uint64_t countPart1 = 0;
+    for (auto& v : population) {
+      countPart1 += preComputeCountPart1Step80[v];
     }
 
-    return {population.size(), 0};
+    // part2
+    std::vector<std::vector<uint8_t>> preComputePopulationPart2Step128;
+    std::vector<uint64_t> preComputeCountPart2Step128;
+    for (int i = 0; i <=8; ++i) {
+      preComputePopulationPart2Step128.push_back(getFinalPopulation(i, 128));
+      preComputeCountPart2Step128.push_back(getCountPopulation(i, 128));
+    }
+    uint64_t countPart2 = 0;
+    for (auto& v : population) {
+      auto pop = preComputePopulationPart2Step128[v];
+      for (auto& p : pop) {
+        countPart2 += preComputeCountPart2Step128[p];
+      }
+    }
+
+    return {countPart1, countPart2};
 });
 
 
