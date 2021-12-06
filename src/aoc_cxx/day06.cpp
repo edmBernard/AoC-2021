@@ -74,8 +74,8 @@ struct Engine {
     preComputeResult(step);
   }
 
-  uint64_t getFinalCount(const std::vector<uint8_t>& initialPopulation, uint16_t finalEpoch, uint16_t currentEpoch = 0) {
-    return computeTotal(initialPopulation, finalEpoch, currentEpoch);
+  uint64_t computeTotal(const std::vector<uint8_t>& initial, uint16_t finalEpoch) {
+    return computeTotal(initial, finalEpoch, 0);
   }
 
 private:
@@ -86,15 +86,13 @@ private:
 
     uint64_t total = 0;
     for (auto& p : initial) {
-      // spdlog::debug("final={}  current={}", finalEpoch, currentEpoch);
       total += computeTotal(preComputedPopulation[p], finalEpoch, currentEpoch + step);
     }
     return total;
   }
 
   void preComputeResult(uint16_t epoch) {
-    for (int i = 0; i <= 8; ++i) {
-      // spdlog::debug("initial={}  epoch={}", initial, epoch);
+    for (uint8_t i = 0; i <= 8; ++i) {
       std::vector<uint8_t> population{i};
       for (uint16_t i = 0; i < epoch; ++i) {
         uint64_t toAdd = 0;
@@ -163,11 +161,11 @@ RegisterCommand day06("day06", {
 
     // part1
     Engine engine1(40);
-    uint64_t countPart1 = engine1.getFinalCount(population, 80);
+    uint64_t countPart1 = engine1.computeTotal(population, 80);
 
     // part2
     Engine engine2(128);
-    uint64_t countPart2 = engine2.getFinalCount(population, 256);
+    uint64_t countPart2 = engine2.computeTotal(population, 256);
 
     return {countPart1, countPart2};
 });
