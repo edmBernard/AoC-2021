@@ -129,8 +129,9 @@ RegisterCommand day06("day06", {
     std::vector<std::vector<uint8_t>> preComputePopulationPart2Step128;
     std::vector<uint64_t> preComputeCountPart2Step128;
     for (int i = 0; i <=8; ++i) {
-      preComputePopulationPart2Step128.push_back(getFinalPopulation(i, 128));
-      preComputeCountPart2Step128.push_back(getCountPopulation(i, 128));
+      const std::vector<uint8_t> pop = getFinalPopulation(i, 128);
+      preComputeCountPart2Step128.push_back(pop.size());
+      preComputePopulationPart2Step128.push_back(pop);
     }
     uint64_t countPart2 = 0;
     for (auto& v : population) {
