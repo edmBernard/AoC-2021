@@ -11,6 +11,8 @@
 #include <sstream>
 #include <tuple>
 #include <vector>
+#include <unordered_map>
+#include <map>
 #include <array>
 #include <algorithm>
 #include <numeric>
@@ -81,6 +83,10 @@ struct Engine {
 private:
 
   uint64_t computeTotal(const std::vector<uint8_t>& initial, uint16_t finalEpoch, uint16_t currentEpoch) {
+    auto found = cacheComputeTotal.find({initial, finalEpoch, currentEpoch});
+    if (found != cacheComputeTotal.end())
+      return found->second;
+
     if (currentEpoch >= finalEpoch)
       return initial.size();
 
@@ -88,6 +94,7 @@ private:
     for (auto& p : initial) {
       total += computeTotal(preComputedPopulation[p], finalEpoch, currentEpoch + step);
     }
+    cacheComputeTotal[{initial, finalEpoch, currentEpoch}] = total;
     return total;
   }
 
@@ -108,6 +115,7 @@ private:
 
   size_t step;
   std::vector<std::vector<uint8_t>> preComputedPopulation;
+  std::map<std::tuple<std::vector<uint8_t>, uint16_t, uint16_t>, uint64_t> cacheComputeTotal;
 };
 
 
