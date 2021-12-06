@@ -24,6 +24,7 @@ namespace rs = ranges;
 namespace rv = ranges::views;
 
 namespace {
+
 inline std::vector<std::string> split(const std::string &original, char separator) {
   std::vector<std::string> results;
   auto start = original.begin();
@@ -41,14 +42,6 @@ inline std::vector<std::string> split(const std::string &original, char separato
   return results;
 }
 
-template <typename T>
-inline T parse(std::string_view input, int base = 10) {
-  T result;
-  const auto [ptr, ec] = std::from_chars(input.data(), input.data() + input.size(), result, base);
-  if (ec != std::errc())
-    throw std::runtime_error(fmt::format("Fail to parse : {}", input));
-  return result;
-}
 
 template <typename T>
 inline std::vector<T> parse(const std::vector<std::string> &input, int base = 10) {
@@ -89,11 +82,13 @@ struct Engine {
 
 private:
 
+  // Compute total by recursion
   uint64_t computeTotal(uint8_t initial, uint16_t step) {
     auto& result = cacheComputedTotal[step][initial];
     if (result != 0)
       return result;
 
+    // if no cache found compute it
     std::vector<uint8_t> population = cacheComputedPopulation[initial];
 
     if (step >= numberOfStep)
@@ -125,34 +120,6 @@ private:
   std::vector<std::vector<uint8_t>> cacheComputedPopulation;
   std::vector<std::vector<uint64_t>> cacheComputedTotal;
 };
-
-
-std::vector<uint8_t> getFinalPopulation(uint8_t initial, uint16_t epoch) {
-  std::vector<uint8_t> population{initial};
-  for (uint16_t i = 0; i < epoch; ++i) {
-    uint64_t toAdd = 0;
-    std::transform(population.begin(), population.end(), population.begin(), [&toAdd](auto x) {
-        toAdd += (x == 0);
-        return x == 0 ? 6 : x - 1;
-      });
-    population.resize(population.size() + toAdd, 8);  // C++20
-  }
-  return population;
-}
-
-
-uint64_t getCountPopulation(uint8_t initial, uint16_t epoch) {
-  std::vector<uint8_t> population{initial};
-  for (uint16_t i = 0; i < epoch; ++i) {
-    uint64_t toAdd = 0;
-    std::transform(population.begin(), population.end(), population.begin(), [&toAdd](auto x) {
-        toAdd += (x == 0);
-        return x == 0 ? 6 : x - 1;
-      });
-    population.resize(population.size() + toAdd, 8);  // C++20
-  }
-  return population.size();
-}
 
 
 } // namespace
