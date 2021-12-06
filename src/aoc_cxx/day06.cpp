@@ -69,7 +69,7 @@ struct Engine {
   Engine(size_t epochByStep, size_t numberOfStep)
   : epochByStep(epochByStep), numberOfStep(numberOfStep), cacheComputedTotal(numberOfStep+1, std::vector<uint64_t>(9, 0)) {
 
-    preComputeResult(epochByStep);
+    preComputeNextPopulation(epochByStep);
   }
 
   uint64_t computeTotal(const std::vector<uint8_t>& initial) {
@@ -100,7 +100,8 @@ private:
     return result;
   }
 
-  void preComputeResult(uint16_t epoch) {
+  void preComputeNextPopulation(uint16_t epoch) {
+    // compute the population create by each state fish
     for (uint8_t i = 0; i <= 8; ++i) {
       std::vector<uint8_t> population{i};
       for (uint16_t i = 0; i < epoch; ++i) {
@@ -143,12 +144,12 @@ RegisterCommand day06("day06", {
     }
 
     // part1
-    Engine engine1(40, 80 / 40 -1);
-    uint64_t countPart1 = engine1.computeTotal(population);
+    Engine enginePart1(40, 80 / 40 -1);
+    uint64_t countPart1 = enginePart1.computeTotal(population);
 
     // part2
-    Engine engine2(32, 256 / 32 -1);
-    uint64_t countPart2 = engine2.computeTotal(population);
+    Engine enginePart2(32, 256 / 32 -1);
+    uint64_t countPart2 = enginePart2.computeTotal(population);
 
     return {countPart1, countPart2};
 });
