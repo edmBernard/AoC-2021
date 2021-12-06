@@ -70,32 +70,39 @@ void showVect(const std::vector<T> &mark) {
   fmt::print("\n");
 }
 
+// Structure that memoize result of the computation
 struct Engine {
 
-  Engine(size_t step) : step(step) {
-    preComputeResult(step);
+  Engine(size_t epochByStep, size_t numberOfStep)
+  : epochByStep(epochByStep), numberOfStep(numberOfStep), cacheComputedTotal(numberOfStep+1, std::vector<uint64_t>(9, 0)) {
+
+    preComputeResult(epochByStep);
   }
 
-  uint64_t computeTotal(const std::vector<uint8_t>& initial, uint16_t finalEpoch) {
-    return computeTotal(initial, finalEpoch, 0);
+  uint64_t computeTotal(const std::vector<uint8_t>& initial) {
+    uint64_t total = 0;
+    for (auto& p : initial) {
+      total += computeTotal(p, 0);
+    }
+    return total;
   }
 
 private:
 
-  uint64_t computeTotal(const std::vector<uint8_t>& initial, uint16_t finalEpoch, uint16_t currentEpoch) {
-    auto found = cacheComputeTotal.find({initial, finalEpoch, currentEpoch});
-    if (found != cacheComputeTotal.end())
-      return found->second;
+  uint64_t computeTotal(uint8_t initial, uint16_t step) {
+    auto& result = cacheComputedTotal[step][initial];
+    if (result != 0)
+      return result;
 
-    if (currentEpoch >= finalEpoch)
-      return initial.size();
+    std::vector<uint8_t> population = cacheComputedPopulation[initial];
 
-    uint64_t total = 0;
-    for (auto& p : initial) {
-      total += computeTotal(preComputedPopulation[p], finalEpoch, currentEpoch + step);
-    }
-    cacheComputeTotal[{initial, finalEpoch, currentEpoch}] = total;
-    return total;
+    if (step >= numberOfStep)
+      return population.size();
+
+    for (auto& p : population)
+      result += computeTotal(p, step + 1);
+
+    return result;
   }
 
   void preComputeResult(uint16_t epoch) {
@@ -109,13 +116,14 @@ private:
           });
         population.resize(population.size() + toAdd, 8);  // C++20
       }
-      preComputedPopulation.push_back(population);
+      cacheComputedPopulation.push_back(population);
     }
   }
 
-  size_t step;
-  std::vector<std::vector<uint8_t>> preComputedPopulation;
-  std::map<std::tuple<std::vector<uint8_t>, uint16_t, uint16_t>, uint64_t> cacheComputeTotal;
+  size_t epochByStep;
+  size_t numberOfStep;
+  std::vector<std::vector<uint8_t>> cacheComputedPopulation;
+  std::vector<std::vector<uint64_t>> cacheComputedTotal;
 };
 
 
@@ -168,12 +176,12 @@ RegisterCommand day06("day06", {
     }
 
     // part1
-    Engine engine1(40);
-    uint64_t countPart1 = engine1.computeTotal(population, 80);
+    Engine engine1(40, 80 / 40 -1);
+    uint64_t countPart1 = engine1.computeTotal(population);
 
     // part2
-    Engine engine2(128);
-    uint64_t countPart2 = engine2.computeTotal(population, 256);
+    Engine engine2(32, 256 / 32 -1);
+    uint64_t countPart2 = engine2.computeTotal(population);
 
     return {countPart1, countPart2};
 });
