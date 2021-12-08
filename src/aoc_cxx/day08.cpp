@@ -69,7 +69,7 @@ void showVect(const std::vector<T> &mark) {
 
 RegisterCommand day08("day08", {
     { "input_day08.txt",       495,  92948968},
-    { "input_day08_test1.txt", 26,      168},
+    { "input_day08_test1.txt", 26,      61229},
   }, [](fs::path filename) -> std::tuple<uint64_t, uint64_t> {
 
     std::ifstream infile(filename);
@@ -78,14 +78,19 @@ RegisterCommand day08("day08", {
     }
 
     std::string line;
-    std::vector<std::string> puzzleInput;
+    std::vector<std::pair<std::vector<std::string>, std::vector<std::string>>> puzzleInput;
 
     uint64_t countPart1 = 0;
 
     while (getline(infile, line)) {
       std::vector<std::string> inputLine = split(line, '|');
+      std::vector<std::string> wire = split(inputLine[1], ' ');
       std::vector<std::string> outputSignal = split(inputLine[1], ' ');
-      // showVect(outputSignal);
+      puzzleInput.push_back({wire, outputSignal});
+    }
+
+    // showVect(outputSignal);
+    for (auto& [wire, outputSignal] : puzzleInput) {
       for (auto& s : outputSignal) {
         // fmt::print("{}\n", s);
         if (s.size() == 2 || s.size() == 4 || s.size() == 3 || s.size() == 7)
