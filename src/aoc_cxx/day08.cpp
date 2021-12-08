@@ -92,7 +92,6 @@ RegisterCommand day08("day08", {
     uint64_t countPart1 = 0;
     for (auto& [wire, outputSignal] : puzzleInput) {
       for (auto& s : outputSignal) {
-        // fmt::print("{}\n", s);
         if (s.size() == 2 || s.size() == 4 || s.size() == 3 || s.size() == 7)
           countPart1 += 1;
       }
@@ -225,6 +224,7 @@ RegisterCommand day08("day08", {
       // find 5
       segmentToValue[number5segment[0]] = 5;
 
+      // compute resulting value
       int value = 0;
       for (auto& s : outputSignal) {
         std::sort(s.begin(), s.end());
