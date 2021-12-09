@@ -77,7 +77,7 @@ void showBoard(const std::vector<T> &mark, std::tuple<uint64_t, uint64_t> size) 
 
 template <typename T>
 struct Board {
-  Board(const std::vector<T> &data, size_t width, size_t height) : data(data), width(width), height(height) {}
+  Board(std::vector<T> &data, size_t width, size_t height) : data(data), width(width), height(height) {}
 
   T operator()(int64_t x, int64_t y) {
     if (x < 0)
@@ -90,6 +90,7 @@ struct Board {
       y = height - 1;
     return data[y * width + x];
   }
+
   bool isLocalMin(int64_t x, int64_t y) {
     int count = 4;
     if (x == 0)
@@ -106,7 +107,7 @@ struct Board {
     count -= operator()(x, y) < operator()(x, y - 1);
     return count == 0;
   }
-  const std::vector<T> &data;
+  std::vector<T> &data;
   const uint64_t width;
   const uint64_t height;
 };
@@ -115,8 +116,8 @@ struct Board {
 
 
 RegisterCommand day09("day09", {
-    { "input_day09.txt",       495, 1055164},
-    { "input_day09_test1.txt", 26,  61229},
+    { "input_day09.txt",       564, 1038240},
+    { "input_day09_test1.txt", 15,  1134},
   }, [](fs::path filename) -> std::tuple<uint64_t, uint64_t> {
 
     std::ifstream infile(filename);
@@ -139,9 +140,11 @@ RegisterCommand day09("day09", {
       height += 1;
     }
 
-    showBoard(puzzleInput, {width, height});
-    // part1
+
     Board board(puzzleInput, width, height);
+    std::vector<int16_t> basinData(puzzleInput.size(), 0);
+    Board basin(basinData, width, height);
+
     uint64_t countPart1 = 0;
     uint64_t minCount = 0;
     for (size_t row = 0; row < height; ++row) {
@@ -150,13 +153,48 @@ RegisterCommand day09("day09", {
           // fmt::print("min x={} y={}\n", col, row);
           minCount += 1;
           countPart1 = countPart1 + 1 + board(col, row);
+          basinData[row * width + col] = minCount;
+        }
+        if (board(col, row) == 9)
+          basinData[row * width + col] = -1;
+      }
+    }
+
+    while (std::count(basinData.begin(), basinData.end(), 0) != 0) {
+      for (size_t row = 0; row < height; ++row) {
+        for (size_t col = 0; col < width; ++col) {
+          int16_t& elem = basinData[row * width + col];
+
+          if (elem != 0)
+            continue;
+
+          if (basin(col+1, row) > 0) {
+            elem = basin(col+1, row);
+            continue;
+          }
+          if (basin(col-1, row) > 0) {
+            elem = basin(col-1, row);
+            continue;
+          }
+          if (basin(col, row+1) > 0) {
+            elem = basin(col, row+1);
+            continue;
+          }
+          if (basin(col, row-1) > 0) {
+            elem = basin(col, row-1);
+            continue;
+          }
         }
       }
     }
-    // fmt::print("min count {}\n", minCount);
+    std::vector<uint16_t> basinSize(minCount, 0);
 
-    // part2
-    uint64_t countPart2 = 0;
+    for (int i = 1; i <= minCount; ++i) {
+      basinSize[i-1] = std::count(basinData.begin(), basinData.end(), i);
+    }
+    std::sort(basinSize.rbegin(), basinSize.rend());
+
+    uint64_t countPart2 = basinSize[0] * basinSize[1] * basinSize[2];
 
     return {countPart1, countPart2};
 });
