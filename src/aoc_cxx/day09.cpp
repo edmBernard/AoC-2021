@@ -160,6 +160,8 @@ RegisterCommand day09("day09", {
       }
     }
 
+    std::vector<uint16_t> basinSize(minCount, 1);
+
     while (std::count(basinData.begin(), basinData.end(), 0) != 0) {
       for (size_t row = 0; row < height; ++row) {
         for (size_t col = 0; col < width; ++col) {
@@ -170,28 +172,28 @@ RegisterCommand day09("day09", {
 
           if (basin(col+1, row) > 0) {
             elem = basin(col+1, row);
+            ++basinSize[elem-1];
             continue;
           }
           if (basin(col-1, row) > 0) {
             elem = basin(col-1, row);
+            ++basinSize[elem-1];
             continue;
           }
           if (basin(col, row+1) > 0) {
             elem = basin(col, row+1);
+            ++basinSize[elem-1];
             continue;
           }
           if (basin(col, row-1) > 0) {
             elem = basin(col, row-1);
+            ++basinSize[elem-1];
             continue;
           }
         }
       }
     }
-    std::vector<uint16_t> basinSize(minCount, 0);
 
-    for (int i = 1; i <= minCount; ++i) {
-      basinSize[i-1] = std::count(basinData.begin(), basinData.end(), i);
-    }
     std::sort(basinSize.rbegin(), basinSize.rend());
 
     uint64_t countPart2 = basinSize[0] * basinSize[1] * basinSize[2];
