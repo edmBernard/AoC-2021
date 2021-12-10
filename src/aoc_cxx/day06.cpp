@@ -1,4 +1,5 @@
 #include "controller.hpp"
+#include "utils.hpp"
 
 #include "aoc_rust.h"
 
@@ -24,36 +25,6 @@ namespace rs = ranges;
 namespace rv = ranges::views;
 
 namespace {
-
-inline std::vector<std::string> split(const std::string &original, char separator) {
-  std::vector<std::string> results;
-  auto start = original.begin();
-  auto end = original.end();
-  auto next = std::find(start, end, separator);
-
-  while (next != end) {
-    results.push_back(std::string(start, next));
-    start = next + 1;
-    next = std::find(start, end, separator);
-  }
-
-  results.push_back(std::string(start, next));
-
-  return results;
-}
-
-
-template <typename T>
-inline std::vector<T> parse(const std::vector<std::string> &input, int base = 10) {
-  std::vector<T> result(input.size());
-  for (size_t i = 0; i < input.size(); ++i) {
-    const auto [ptr, ec] = std::from_chars(input[i].data(), input[i].data() + input[i].size(), result[i], base);
-    if (ec != std::errc())
-      throw std::runtime_error(fmt::format("Fail to parse : {}", input[i]));
-  }
-  return result;
-}
-
 
 template <typename T>
 void showVect(const std::vector<T> &mark) {
@@ -137,11 +108,9 @@ RegisterCommand day06("day06", {
     }
 
     std::string line;
-    std::vector<uint8_t> population;
 
-    while (getline(infile, line)) {
-      population = parse<uint8_t>(split(line, ','));
-    }
+    getline(infile, line);
+    std::vector<uint8_t> population = aoc::splitString(line, ',');
 
     // part1
     Engine enginePart1(40, 80 / 40 -1);

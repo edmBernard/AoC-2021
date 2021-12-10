@@ -1,4 +1,5 @@
 #include "controller.hpp"
+#include "utils.hpp"
 
 #include "aoc_rust.h"
 
@@ -22,31 +23,6 @@ namespace rs = ranges;
 namespace rv = ranges::views;
 
 namespace {
-inline std::vector<std::string> split(const std::string &original, char separator) {
-  std::vector<std::string> results;
-  auto start = original.begin();
-  auto end = original.end();
-  auto next = std::find(start, end, separator);
-
-  while (next != end) {
-    results.push_back(std::string(start, next));
-    start = next + 1;
-    next = std::find(start, end, separator);
-  }
-
-  results.push_back(std::string(start, next));
-
-  return results;
-}
-
-template <typename T>
-inline T parse(std::string_view input, int base = 10) {
-  T result;
-  const auto [ptr, ec] = std::from_chars(input.data(), input.data() + input.size(), result, base);
-  if (ec != std::errc())
-    throw std::runtime_error(fmt::format("Fail to parse : {}", input));
-  return result;
-}
 
 
 template <int Dim, typename T>
@@ -100,11 +76,11 @@ RegisterCommand day05("day05", {
 
     while (getline(infile, line)) {
 
-      std::vector<std::string> splitted = split(line, ' ');
-      std::vector<std::string> left = split(splitted[0], ',');
-      std::vector<std::string> right = split(splitted[2], ',');
+      std::vector<std::string_view> splitted = aoc::splitString(line, ' ');
+      std::vector<uint16_t> left = aoc::splitString(splitted[0], ',');
+      std::vector<uint16_t> right = aoc::splitString(splitted[2], ',');
 
-      inputPuzzle.push_back({parse<uint16_t>(left[0]), parse<uint16_t>(left[1]), parse<uint16_t>(right[0]), parse<uint16_t>(right[1])});
+      inputPuzzle.push_back({left[0], left[1], right[0], right[1]});
 
     }
 

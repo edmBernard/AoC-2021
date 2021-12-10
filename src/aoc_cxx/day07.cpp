@@ -1,4 +1,5 @@
 #include "controller.hpp"
+#include "utils.hpp"
 
 #include "aoc_rust.h"
 
@@ -94,11 +95,8 @@ RegisterCommand day07("day07", {
     }
 
     std::string line;
-    std::vector<int32_t> puzzleInput;
-
-    while (getline(infile, line)) {
-      puzzleInput = parse<int32_t>(split(line, ','));
-    }
+    getline(infile, line);
+    std::vector<int32_t> puzzleInput = aoc::splitString(line, ',');
 
     auto [pmin, pmax] = std::minmax_element(puzzleInput.begin(), puzzleInput.end());
 

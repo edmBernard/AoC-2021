@@ -1,4 +1,5 @@
 #include "controller.hpp"
+#include "utils.hpp"
 
 #include "aoc_rust.h"
 
@@ -54,12 +55,7 @@ RegisterCommand day03("day03", {
     size_t lineLength = 0;
     while (getline(infile, line)) {
 
-      uint16_t result;
-      const auto [ptr, ec] = std::from_chars(line.data(), line.data() + line.size(), result, 2);
-      if (ec != std::errc())
-        throw std::runtime_error(fmt::format("Fail to parse : {}", line));
-
-      inputPuzzle.push_back(result);
+      inputPuzzle.push_back(aoc::parse<uint16_t>(line, 2));
 
       if (lineLength == 0) {
         lineLength = line.size();

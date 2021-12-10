@@ -1,4 +1,5 @@
 #include "controller.hpp"
+#include "utils.hpp"
 
 #include "aoc_rust.h"
 
@@ -25,10 +26,7 @@ enum Direction {
 
 std::pair<Direction, uint16_t> parseInputLine(std::string_view direction, std::string_view value) {
 
-  uint16_t result;
-  const auto [ptr, ec] = std::from_chars(value.data(), value.data() + value.size(), result);
-  if (ec != std::errc())
-    throw std::runtime_error(fmt::format("Fail to parse : {}", value));
+  uint16_t result = aoc::parse<uint16_t>(value);
 
   if (direction == "forward") {
     return {Direction::Forward, result};

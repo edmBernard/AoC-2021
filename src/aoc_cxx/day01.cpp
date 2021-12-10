@@ -1,4 +1,5 @@
 #include "controller.hpp"
+#include "utils.hpp"
 
 #include "aoc_rust.h"
 
@@ -33,11 +34,7 @@ RegisterCommand day01("day01", {
     // from_char is faster than stol
     // istream_iterator<uint16_t> is also slower than this while loop
     while (getline(infile, line)) {
-      uint16_t result;
-      const auto [ptr, ec] = std::from_chars(line.data(), line.data() + line.size(), result);
-      if (ec != std::errc())
-        throw std::runtime_error(fmt::format("Fail to parse : {}", line));
-      depthList.push_back(result);
+      depthList.push_back(aoc::parse<uint16_t>(line));
     }
 
     // part1
