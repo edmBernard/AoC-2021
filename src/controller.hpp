@@ -32,6 +32,7 @@ public:
       throw std::runtime_error(fmt::format("Input path does not exists : {}", fs::absolute(input).string()));
     }
 
+    double totatAverageTime = 0;
     const bool isDirectory = fs::is_directory(input);
     for (auto &[name, expectedResults, command] : commands) {
       if (!matcher(name, filters)) {
@@ -48,6 +49,7 @@ public:
 
         std::chrono::duration<double, std::milli> elapsed_temp = std::chrono::high_resolution_clock::now() - start_temp;
         spdlog::info("{: <10} in {:>7.2f} ms : part1={:<10} part2={:<10}", name, elapsed_temp.count(), part1, part2);
+        totatAverageTime += elapsed_temp.count();
         continue;
       }
 
@@ -59,6 +61,7 @@ public:
         auto [part1, part2] = command(input / filename);
         std::chrono::duration<double, std::milli> elapsed_temp = std::chrono::high_resolution_clock::now() - start_temp;
         spdlog::info("{: <25} in {:>7.2f} ms : part1={:<10} part2={:<10}", name, elapsed_temp.count() / repetition, part1, part2);
+        totatAverageTime += elapsed_temp.count() / repetition;
 
         if (part1 != expectedPart1) {
           spdlog::error("Result Part1 missmatch : expected={:<10}  got={:<10}", expectedPart1, part1);
@@ -68,6 +71,7 @@ public:
         }
       }
     }
+    spdlog::info("Total time : {:>7.2f} ms", totatAverageTime);
   }
 
   void show() {
