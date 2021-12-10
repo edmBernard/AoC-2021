@@ -16,7 +16,7 @@
 #include <array>
 #include <algorithm>
 #include <numeric>
-#include <optional>
+#include <variant>
 
 namespace aoc {
 
@@ -25,56 +25,6 @@ namespace rs = ranges;
 namespace rv = ranges::views;
 
 namespace {
-
-inline std::vector<std::string> split(const std::string &original, char separator) {
-  std::vector<std::string> results;
-  auto start = original.begin();
-  auto end = original.end();
-  auto next = std::find(start, end, separator);
-
-  while (next != end) {
-    results.push_back(std::string(start, next));
-    start = next + 1;
-    next = std::find(start, end, separator);
-  }
-
-  results.push_back(std::string(start, next));
-
-  return results;
-}
-
-
-template <typename T>
-inline std::vector<T> parse(const std::vector<std::string> &input, int base = 10) {
-  std::vector<T> result(input.size());
-  for (size_t i = 0; i < input.size(); ++i) {
-    const auto [ptr, ec] = std::from_chars(input[i].data(), input[i].data() + input[i].size(), result[i], base);
-    if (ec != std::errc())
-      throw std::runtime_error(fmt::format("Fail to parse : {}", input[i]));
-  }
-  return result;
-}
-
-
-template <typename T>
-void showVect(const std::vector<T> &mark) {
-  for (size_t col = 0; col < mark.size(); ++col) {
-    fmt::print("'{}' ", mark[col]);
-  }
-  fmt::print("\n");
-}
-
-
-template <typename T>
-void showBoard(const std::vector<T> &mark, std::tuple<uint64_t, uint64_t> size) {
-  const auto [width, height] = size;
-  for (size_t row = 0; row < height; ++row) {
-    for (size_t col = 0; col < width; ++col) {
-      fmt::print("{} ", mark[row * width + col]);
-    }
-    fmt::print("\n");
-  }
-}
 
 char getComplement(char c) {
   switch (c) {
@@ -99,7 +49,7 @@ char getComplement(char c) {
   }
 }
 
-uint64_t getScore(char c) {
+uint64_t getScorePart1(char c) {
   switch (c) {
     case ')':
       return 3;
@@ -114,12 +64,23 @@ uint64_t getScore(char c) {
   }
 }
 
-std::optional<char> checkLine(const std::string& line) {
+uint64_t getScorePart2(char c) {
+  switch (c) {
+    case ')':
+      return 1;
+    case ']':
+      return 2;
+    case '}':
+      return 3;
+    case '>':
+      return 4;
+    default:
+      throw std::runtime_error("Unkown symbol : " + c);
+  }
+}
+
+std::variant<char, uint64_t> checkLine(const std::string& line) {
   std::vector<char> stack;
-  int countRound = 0;  // round bracket
-  int countSquare = 0;  // square bracket
-  int countCurly = 0;  // curly bracket
-  int countAngle = 0;  // angle bracket
 
   for (char c : line) {
     switch (c) {
@@ -162,8 +123,15 @@ std::optional<char> checkLine(const std::string& line) {
       default:
         throw std::runtime_error("Unkown symbol : " + c);
     }
+
   }
-  return {};
+
+  uint64_t count = 0;
+  for (int i = stack.size() - 1; i >= 0; --i) {
+    count *= 5;
+    count += getScorePart2(getComplement(stack[i]));
+  }
+  return count;
 }
 
 
@@ -171,8 +139,8 @@ std::optional<char> checkLine(const std::string& line) {
 
 
 RegisterCommand day10("day10", {
-    { "input_day10.txt",       243939, 1038240},
-    { "input_day10_test1.txt", 26397,  1134},
+    { "input_day10.txt",       243939, 2421222841},
+    { "input_day10_test1.txt", 26397,  288957},
   }, [](fs::path filename) -> std::tuple<uint64_t, uint64_t> {
 
     std::ifstream infile(filename);
@@ -188,16 +156,21 @@ RegisterCommand day10("day10", {
     }
 
     uint64_t countPart1 = 0;
+    std::vector<uint64_t> scoreListPart2;
 
     for (auto& line : puzzleInput) {
       auto result = checkLine(line);
-      if (result) {
-        countPart1 += getScore(result.value());
+      if (std::holds_alternative<char>(result)) {
+        countPart1 += getScorePart1(std::get<char>(result));
+      } else {
+        scoreListPart2.push_back(std::get<1>(result));
       }
 
     }
 
-    uint64_t countPart2 = 0;
+    std::sort(scoreListPart2.begin(), scoreListPart2.end());
+
+    uint64_t countPart2 = scoreListPart2[scoreListPart2.size() / 2];
 
     return {countPart1, countPart2};
 });
