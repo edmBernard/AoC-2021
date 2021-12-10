@@ -1,5 +1,6 @@
 #include "controller.hpp"
 #include "utils.hpp"
+#include "utils.hpp"
 
 #include "aoc_rust.h"
 
@@ -120,7 +121,9 @@ RegisterCommand day04("day04", {
       if (line.empty())
         continue;
 
-      std::vector<uint16_t> boardLine = aoc::splitString(line, ' ');
+      std::istringstream instream(line);
+      std::istream_iterator<uint16_t> start(instream), end;
+      std::vector<uint16_t> boardLine(start, end);
 
       std::copy_n(boardLine.begin(), dim, temporaryBoard.begin() + lineInBoard);
       lineInBoard += dim;

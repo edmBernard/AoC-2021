@@ -1,4 +1,5 @@
 #include "controller.hpp"
+#include "utils.hpp"
 
 #include "aoc_rust.h"
 
@@ -24,23 +25,6 @@ namespace rs = ranges;
 namespace rv = ranges::views;
 
 namespace {
-
-inline std::vector<std::string> split(const std::string &original, char separator) {
-  std::vector<std::string> results;
-  auto start = original.begin();
-  auto end = original.end();
-  auto next = std::find(start, end, separator);
-
-  while (next != end) {
-    results.push_back(std::string(start, next));
-    start = next + 1;
-    next = std::find(start, end, separator);
-  }
-
-  results.push_back(std::string(start, next));
-
-  return results;
-}
 
 
 template <typename T>
@@ -70,9 +54,9 @@ RegisterCommand day08("day08", {
 
 
     while (getline(infile, line)) {
-      std::vector<std::string> inputLine = split(line, '|');
-      std::vector<std::string> wire = split(inputLine[0], ' ');
-      std::vector<std::string> outputSignal = split(inputLine[1], ' ');
+      std::vector<std::string_view> inputLine = aoc::splitString(line, '|');
+      std::vector<std::string> wire = aoc::splitString(inputLine[0], ' ');
+      std::vector<std::string> outputSignal = aoc::splitString(inputLine[1], ' ');
       puzzleInput.push_back({wire, outputSignal});
     }
 
