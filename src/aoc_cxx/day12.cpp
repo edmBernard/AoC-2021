@@ -92,7 +92,7 @@ uint64_t graphWalk(size_t currentNode, std::vector<size_t> counterSmallCave, siz
 
   // check if small cave
   if (currentNode >= indexSmallCave) {
-    if (counterSmallCave[currentNode] > 0) {
+    if (counterSmallCave[currentNode - indexSmallCave] > 0) {
       if (isPart1) {
         return 0;
       } else {
@@ -103,7 +103,7 @@ uint64_t graphWalk(size_t currentNode, std::vector<size_t> counterSmallCave, siz
         }
       }
     }
-    counterSmallCave[currentNode] += 1;
+    counterSmallCave[currentNode - indexSmallCave] += 1;
   }
 
   uint64_t numberPath = 0;
@@ -164,7 +164,7 @@ RegisterCommand day12("day12", {
         puzzleInputInVector[mapNodeIndex[key]].push_back(mapNodeIndex[v]);
       }
     }
-    std::vector<size_t> counterSmallCave(puzzleInputInVector.size(), 0);
+    std::vector<size_t> counterSmallCave(puzzleInputInVector.size() - indexSmallCave, 0);
     uint64_t countPart1 = graphWalk(0, counterSmallCave, indexSmallCave, puzzleInputInVector, true);
     uint64_t countPart2 = graphWalk(0, counterSmallCave, indexSmallCave, puzzleInputInVector, false);
 
