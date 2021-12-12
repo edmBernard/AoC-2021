@@ -44,74 +44,33 @@ void showBoard(const std::vector<T> &mark, std::tuple<uint64_t, uint64_t> size) 
   }
 }
 
-template <typename T>
-struct Board {
-  Board(std::vector<T> &data, size_t width, size_t height) : data(data), width(width), height(height) {}
-
-  // return the number of flash
-  uint64_t increment(int64_t x, int64_t y) {
-    if (x < 0 || y < 0 || x >= width || y >= height)
-      return 0;
-
-    ++data[y * width + x];
-    if (data[y * width + x] != 10)
-      return 0;
-
-    uint64_t total = 1;
-    total += increment(x-1, y-1);
-    total += increment(x,   y-1);
-    total += increment(x+1, y-1);
-    total += increment(x-1, y);
-    total += increment(x+1, y);
-    total += increment(x-1, y+1);
-    total += increment(x,   y+1);
-    total += increment(x+1, y+1);
-    return total;
-  }
-
-  bool reset(int64_t x, int64_t y) {
-    if (x < 0 || y < 0 || x >= width || y >= height)
-      return false;
-
-    if (data[y * width + x] > 9) {
-      data[y * width + x] = 0;
-      return true;
-    }
-    return false;
-  }
-
-  std::vector<T> &data;
-  const uint64_t width;
-  const uint64_t height;
-};
-
-uint64_t graphWalk(size_t currentNode, const std::vector<size_t>& counterSmallCave, size_t indexSmallCave, const std::vector<std::vector<size_t>>& puzzleInputInVector, bool isPart1) {
-  if (currentNode == 1) {
-    // 1 is the End Node
-    return 1;
-  }
-
+uint64_t graphWalk(uint8_t currentNode, const std::vector<uint8_t>& counterSmallCave, uint8_t indexSmallCave, const std::vector<std::vector<uint8_t>>& puzzleInputInVector, bool isPart1) {
   // check if small cave
   if (currentNode >= indexSmallCave) {
     if (counterSmallCave[currentNode - indexSmallCave] > 0) {
       if (isPart1) {
         return 0;
       } else {
-        for (auto& value : counterSmallCave) {
+        for (auto value : counterSmallCave) {
           if (value >= 2) {
             return 0;
           }
         }
       }
     }
-    // try to reduce allocation. counterSmallCave is modified only for small cave
-    std::vector<size_t> counterSmallCaveCopy = counterSmallCave;
+    // try to reduce allocation. counterSmallCave is modified/copied only for small cave
+    std::vector<uint8_t> counterSmallCaveCopy = counterSmallCave;
     counterSmallCaveCopy[currentNode - indexSmallCave] += 1;
     uint64_t numberPath = 0;
-    for (const auto& v : puzzleInputInVector[currentNode]) {
-      if (v != 0) {
-        // 0 is the Start Node
-        numberPath += graphWalk(v, counterSmallCaveCopy, indexSmallCave, puzzleInputInVector, isPart1);
+    for (auto v : puzzleInputInVector[currentNode]) {
+      switch (v) {
+        case 0: // 0 is the Start Node
+          continue;
+        case 1: // 1 is the End Node
+          numberPath += 1;
+          break;
+        default:
+          numberPath += graphWalk(v, counterSmallCaveCopy, indexSmallCave, puzzleInputInVector, isPart1);
       }
     }
     return numberPath;
@@ -119,10 +78,15 @@ uint64_t graphWalk(size_t currentNode, const std::vector<size_t>& counterSmallCa
   } else {
 
     uint64_t numberPath = 0;
-    for (const auto& v : puzzleInputInVector[currentNode]) {
-      if (v != 0) {
-        // 0 is the Start Node
-        numberPath += graphWalk(v, counterSmallCave, indexSmallCave, puzzleInputInVector, isPart1);
+    for (auto v : puzzleInputInVector[currentNode]) {
+      switch (v) {
+        case 0: // 0 is the Start Node
+          continue;
+        case 1: // 1 is the End Node
+          numberPath += 1;
+          break;
+        default:
+          numberPath += graphWalk(v, counterSmallCave, indexSmallCave, puzzleInputInVector, isPart1);
       }
     }
     return numberPath;
@@ -152,11 +116,11 @@ RegisterCommand day12("day12", {
       puzzleInput[temp[1]].push_back(temp[0]);
     }
     // convert map to vector
-    std::unordered_map<std::string, std::size_t> mapNodeIndex;
+    std::unordered_map<std::string, uint8_t> mapNodeIndex;
     mapNodeIndex["start"] = 0;
     mapNodeIndex["end"] = 1;
 
-    std::size_t count = 2;
+    uint8_t count = 2;
     // big cave
     for (auto& [key, value] : puzzleInput) {
       if (key[0] < 97) {
@@ -165,20 +129,20 @@ RegisterCommand day12("day12", {
       }
     }
     // small cave
-    std::size_t indexSmallCave = count;
+    uint8_t indexSmallCave = count;
     for (auto& [key, value] : puzzleInput) {
       if (key[0] >= 97 && key != "start" && key != "end") {
         mapNodeIndex[key] = count;
         ++count;
       }
     }
-    std::vector<std::vector<size_t>> puzzleInputInVector(count, std::vector<size_t>{});
+    std::vector<std::vector<uint8_t>> puzzleInputInVector(count, std::vector<uint8_t>{});
     for (auto& [key, value] : puzzleInput) {
       for (auto& v : value) {
         puzzleInputInVector[mapNodeIndex[key]].push_back(mapNodeIndex[v]);
       }
     }
-    std::vector<size_t> counterSmallCave(puzzleInputInVector.size() - indexSmallCave, 0);
+    std::vector<uint8_t> counterSmallCave(puzzleInputInVector.size() - indexSmallCave, 0);
     uint64_t countPart1 = graphWalk(0, counterSmallCave, indexSmallCave, puzzleInputInVector, true);
     uint64_t countPart2 = graphWalk(0, counterSmallCave, indexSmallCave, puzzleInputInVector, false);
 
