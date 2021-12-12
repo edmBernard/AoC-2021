@@ -85,7 +85,7 @@ struct Board {
   const uint64_t height;
 };
 
-uint64_t graphWalk(const std::string& currentNode, std::vector<std::string> path, const std::unordered_map<std::string, std::vector<std::string>>& puzzleInput) {
+uint64_t graphWalk(const std::string& currentNode, std::vector<std::string> path, std::unordered_map<std::string, uint64_t> counterSmallCave, const std::unordered_map<std::string, std::vector<std::string>>& puzzleInput, std::size_t part) {
   if (currentNode == "end") {
     // showVect(path);
     return 1;
@@ -95,26 +95,46 @@ uint64_t graphWalk(const std::string& currentNode, std::vector<std::string> path
   // 65 is 'A' and 97 'a'
   // >= 97 check if it's minuscule
   if (currentNode[0] >= 97) {
-    auto pos = std::find(path.begin(), path.end(), currentNode);
-    if (pos != path.end()) {
-      return 0;
+    if (part == 1) {
+      if (counterSmallCave.count(currentNode) >= 1) {
+        return 0;
+      }
+      if (counterSmallCave.count(currentNode) == 0) {
+        counterSmallCave[currentNode] = 1;
+      } else {
+        counterSmallCave[currentNode] += 1;
+      }
+    } else {
+      if (counterSmallCave.count(currentNode) == 0) {
+        counterSmallCave[currentNode] = 1;
+      } else {
+        for (auto& [key, value] : counterSmallCave) {
+          if (value >= 2) {
+            return 0;
+          }
+        }
+        counterSmallCave[currentNode] += 1;
+      }
     }
   }
 
-  uint64_t count = 0;
+  uint64_t numberPath = 0;
   path.push_back(currentNode);
   for (const auto& v : puzzleInput.at(currentNode)) {
-    count += graphWalk(v, path, puzzleInput);
+    if (v != "start") {
+      numberPath += graphWalk(v, path, counterSmallCave, puzzleInput, part);
+    }
   }
-  return count;
+  return numberPath;
 }
 
 } // namespace
 
 
 RegisterCommand day12("day12", {
-    { "input_day12.txt",       1719,  232},
-    { "input_day12_test1.txt", 226,  195},
+    { "input_day12.txt",       3713,  91292},
+    { "input_day12_test1.txt", 10,    36},
+    { "input_day12_test2.txt", 226,   3509},
   }, [](fs::path filename) -> std::tuple<uint64_t, uint64_t> {
 
     std::ifstream infile(filename);
@@ -139,9 +159,8 @@ RegisterCommand day12("day12", {
     // }
 
 
-    uint64_t countPart1 = graphWalk("start", {}, puzzleInput);
-    uint64_t countPart2 = 0;
-
+    uint64_t countPart1 = graphWalk("start", {}, {}, puzzleInput, 1);
+    uint64_t countPart2 = graphWalk("start", {}, {}, puzzleInput, 2);
 
     return {countPart1, countPart2};
 });
