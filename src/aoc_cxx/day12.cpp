@@ -85,15 +85,15 @@ struct Board {
   const uint64_t height;
 };
 
-uint64_t graphWalk(const std::string& currentNode, std::unordered_map<std::string, uint64_t> counterSmallCave, const std::unordered_map<std::string, std::vector<std::string>>& puzzleInput, std::size_t part) {
-  if (currentNode == "end") {
+uint64_t graphWalk(size_t currentNode, std::unordered_map<size_t, size_t> counterSmallCave, size_t indexSmallCave, const std::vector<std::vector<size_t>>& puzzleInputInVector, std::size_t part) {
+  if (currentNode == 1) {
     return 1;
   }
 
   // check if small cave
   // 65 is 'A' and 97 'a'
   // >= 97 check if it's minuscule
-  if (currentNode[0] >= 97) {
+  if (currentNode >= indexSmallCave) {
     if (part == 1) {
       if (counterSmallCave.count(currentNode) >= 1) {
         return 0;
@@ -118,9 +118,9 @@ uint64_t graphWalk(const std::string& currentNode, std::unordered_map<std::strin
   }
 
   uint64_t numberPath = 0;
-  for (const auto& v : puzzleInput.at(currentNode)) {
-    if (v != "start") {
-      numberPath += graphWalk(v, counterSmallCave, puzzleInput, part);
+  for (const auto& v : puzzleInputInVector[currentNode]) {
+    if (v != 0) {
+      numberPath += graphWalk(v, counterSmallCave, indexSmallCave, puzzleInputInVector, part);
     }
   }
   return numberPath;
@@ -148,9 +148,36 @@ RegisterCommand day12("day12", {
       puzzleInput[temp[0]].push_back(temp[1]);
       puzzleInput[temp[1]].push_back(temp[0]);
     }
+    // convert map to vector
+    std::unordered_map<std::string, std::size_t> mapNodeIndex;
+    mapNodeIndex["start"] = 0;
+    mapNodeIndex["end"] = 1;
 
-    uint64_t countPart1 = graphWalk("start", {}, puzzleInput, 1);
-    uint64_t countPart2 = graphWalk("start", {}, puzzleInput, 2);
+    std::size_t count = 2;
+    // big cave
+    for (auto& [key, value] : puzzleInput) {
+      if (key[0] < 97) {
+        mapNodeIndex[key] = count;
+        ++count;
+      }
+    }
+    // small cave
+    std::size_t indexSmallCave = count;
+    for (auto& [key, value] : puzzleInput) {
+      if (key[0] >= 97 && key != "start" && key != "end") {
+        mapNodeIndex[key] = count;
+        ++count;
+      }
+    }
+    std::vector<std::vector<size_t>> puzzleInputInVector(count, std::vector<size_t>{});
+    for (auto& [key, value] : puzzleInput) {
+      for (auto& v : value) {
+        puzzleInputInVector[mapNodeIndex[key]].push_back(mapNodeIndex[v]);
+      }
+    }
+
+    uint64_t countPart1 = graphWalk(0, {}, indexSmallCave, puzzleInputInVector, 1);
+    uint64_t countPart2 = graphWalk(0, {}, indexSmallCave, puzzleInputInVector, 2);
 
     return {countPart1, countPart2};
 });
