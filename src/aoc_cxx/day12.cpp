@@ -85,9 +85,8 @@ struct Board {
   const uint64_t height;
 };
 
-uint64_t graphWalk(const std::string& currentNode, std::vector<std::string> path, std::unordered_map<std::string, uint64_t> counterSmallCave, const std::unordered_map<std::string, std::vector<std::string>>& puzzleInput, std::size_t part) {
+uint64_t graphWalk(const std::string& currentNode, std::unordered_map<std::string, uint64_t> counterSmallCave, const std::unordered_map<std::string, std::vector<std::string>>& puzzleInput, std::size_t part) {
   if (currentNode == "end") {
-    // showVect(path);
     return 1;
   }
 
@@ -119,10 +118,9 @@ uint64_t graphWalk(const std::string& currentNode, std::vector<std::string> path
   }
 
   uint64_t numberPath = 0;
-  path.push_back(currentNode);
   for (const auto& v : puzzleInput.at(currentNode)) {
     if (v != "start") {
-      numberPath += graphWalk(v, path, counterSmallCave, puzzleInput, part);
+      numberPath += graphWalk(v, counterSmallCave, puzzleInput, part);
     }
   }
   return numberPath;
@@ -151,16 +149,8 @@ RegisterCommand day12("day12", {
       puzzleInput[temp[1]].push_back(temp[0]);
     }
 
-    // for (auto& [key, value] : puzzleInput) {
-    //   fmt::print("key={}\n", key);
-    //   for (auto& v : value) {
-    //     fmt::print("  value={}\n", v);
-    //   }
-    // }
-
-
-    uint64_t countPart1 = graphWalk("start", {}, {}, puzzleInput, 1);
-    uint64_t countPart2 = graphWalk("start", {}, {}, puzzleInput, 2);
+    uint64_t countPart1 = graphWalk("start", {}, puzzleInput, 1);
+    uint64_t countPart2 = graphWalk("start", {}, puzzleInput, 2);
 
     return {countPart1, countPart2};
 });
