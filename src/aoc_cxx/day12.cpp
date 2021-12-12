@@ -85,42 +85,31 @@ struct Board {
   const uint64_t height;
 };
 
-uint64_t graphWalk(size_t currentNode, std::unordered_map<size_t, size_t> counterSmallCave, size_t indexSmallCave, const std::vector<std::vector<size_t>>& puzzleInputInVector, std::size_t part) {
+uint64_t graphWalk(size_t currentNode, std::vector<size_t> counterSmallCave, size_t indexSmallCave, const std::vector<std::vector<size_t>>& puzzleInputInVector, bool isPart1) {
   if (currentNode == 1) {
     return 1;
   }
 
   // check if small cave
-  // 65 is 'A' and 97 'a'
-  // >= 97 check if it's minuscule
   if (currentNode >= indexSmallCave) {
-    if (part == 1) {
-      if (counterSmallCave.count(currentNode) >= 1) {
+    if (counterSmallCave[currentNode] > 0) {
+      if (isPart1) {
         return 0;
-      }
-      if (counterSmallCave.count(currentNode) == 0) {
-        counterSmallCave[currentNode] = 1;
       } else {
-        counterSmallCave[currentNode] += 1;
-      }
-    } else {
-      if (counterSmallCave.count(currentNode) == 0) {
-        counterSmallCave[currentNode] = 1;
-      } else {
-        for (auto& [key, value] : counterSmallCave) {
+        for (auto& value : counterSmallCave) {
           if (value >= 2) {
             return 0;
           }
         }
-        counterSmallCave[currentNode] += 1;
       }
     }
+    counterSmallCave[currentNode] += 1;
   }
 
   uint64_t numberPath = 0;
   for (const auto& v : puzzleInputInVector[currentNode]) {
     if (v != 0) {
-      numberPath += graphWalk(v, counterSmallCave, indexSmallCave, puzzleInputInVector, part);
+      numberPath += graphWalk(v, counterSmallCave, indexSmallCave, puzzleInputInVector, isPart1);
     }
   }
   return numberPath;
@@ -175,9 +164,9 @@ RegisterCommand day12("day12", {
         puzzleInputInVector[mapNodeIndex[key]].push_back(mapNodeIndex[v]);
       }
     }
-
-    uint64_t countPart1 = graphWalk(0, {}, indexSmallCave, puzzleInputInVector, 1);
-    uint64_t countPart2 = graphWalk(0, {}, indexSmallCave, puzzleInputInVector, 2);
+    std::vector<size_t> counterSmallCave(puzzleInputInVector.size(), 0);
+    uint64_t countPart1 = graphWalk(0, counterSmallCave, indexSmallCave, puzzleInputInVector, true);
+    uint64_t countPart2 = graphWalk(0, counterSmallCave, indexSmallCave, puzzleInputInVector, false);
 
     return {countPart1, countPart2};
 });
