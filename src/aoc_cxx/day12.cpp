@@ -85,8 +85,9 @@ struct Board {
   const uint64_t height;
 };
 
-uint64_t graphWalk(size_t currentNode, std::vector<size_t> counterSmallCave, size_t indexSmallCave, const std::vector<std::vector<size_t>>& puzzleInputInVector, bool isPart1) {
+uint64_t graphWalk(size_t currentNode, const std::vector<size_t>& counterSmallCave, size_t indexSmallCave, const std::vector<std::vector<size_t>>& puzzleInputInVector, bool isPart1) {
   if (currentNode == 1) {
+    // 1 is the End Node
     return 1;
   }
 
@@ -103,16 +104,29 @@ uint64_t graphWalk(size_t currentNode, std::vector<size_t> counterSmallCave, siz
         }
       }
     }
-    counterSmallCave[currentNode - indexSmallCave] += 1;
-  }
-
-  uint64_t numberPath = 0;
-  for (const auto& v : puzzleInputInVector[currentNode]) {
-    if (v != 0) {
-      numberPath += graphWalk(v, counterSmallCave, indexSmallCave, puzzleInputInVector, isPart1);
+    // try to reduce allocation. counterSmallCave is modified only for small cave
+    std::vector<size_t> counterSmallCaveCopy = counterSmallCave;
+    counterSmallCaveCopy[currentNode - indexSmallCave] += 1;
+    uint64_t numberPath = 0;
+    for (const auto& v : puzzleInputInVector[currentNode]) {
+      if (v != 0) {
+        // 0 is the Start Node
+        numberPath += graphWalk(v, counterSmallCaveCopy, indexSmallCave, puzzleInputInVector, isPart1);
+      }
     }
+    return numberPath;
+
+  } else {
+
+    uint64_t numberPath = 0;
+    for (const auto& v : puzzleInputInVector[currentNode]) {
+      if (v != 0) {
+        // 0 is the Start Node
+        numberPath += graphWalk(v, counterSmallCave, indexSmallCave, puzzleInputInVector, isPart1);
+      }
+    }
+    return numberPath;
   }
-  return numberPath;
 }
 
 } // namespace
