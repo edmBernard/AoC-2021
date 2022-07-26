@@ -15,8 +15,8 @@ namespace aoc {
 
 namespace fs = std::filesystem;
 
-using CommandFunction = std::function<std::tuple<uint64_t, uint64_t>(fs::path)>;
-using CommandRustFunction = std::function<void(const std::string&, uint64_t&, uint64_t&)>;
+using CommandFunction = std::function<std::array<uint64_t, 2>(fs::path)>;
+using CommandRustFunction = std::function<std::array<uint64_t, 2>(const std::string&)>;
 using ExpectedResults = std::vector<std::tuple<fs::path, uint64_t, uint64_t>>;
 using CommandRegister = std::vector<std::tuple<std::string, ExpectedResults, CommandFunction>>;
 
@@ -101,11 +101,8 @@ public:
 class RegisterRustCommand {
 public:
   RegisterRustCommand(const std::string &name, ExpectedResults expectedResults, CommandRustFunction command) {
-    Controller::GetCommandRegister().push_back({name, expectedResults, [command](fs::path filename) -> std::tuple<uint64_t, uint64_t> {
-        uint64_t part1 = 0;
-        uint64_t part2 = 0;
-        command(filename.string(), part1, part2);
-        return {part1, part2};
+    Controller::GetCommandRegister().push_back({name, expectedResults, [command](fs::path filename) -> std::array<uint64_t, 2> {
+        return command(filename.string());
       }
     });
   }

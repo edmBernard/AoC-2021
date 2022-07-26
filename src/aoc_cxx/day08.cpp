@@ -42,7 +42,7 @@ void showVect(const std::vector<T> &mark) {
 RegisterCommand day08("day08", {
     { "input_day08.txt",       495, 1055164},
     { "input_day08_test1.txt", 26,  61229},
-  }, [](fs::path filename) -> std::tuple<uint64_t, uint64_t> {
+  }, [](fs::path filename) -> std::array<uint64_t, 2> {
 
     std::ifstream infile(filename);
     if (!infile.is_open()) {

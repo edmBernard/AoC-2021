@@ -141,7 +141,7 @@ std::variant<char, uint64_t> checkLine(const std::string& line) {
 RegisterCommand day10("day10", {
     { "input_day10.txt",       243939, 2421222841},
     { "input_day10_test1.txt", 26397,  288957},
-  }, [](fs::path filename) -> std::tuple<uint64_t, uint64_t> {
+  }, [](fs::path filename) -> std::array<uint64_t, 2> {
 
     std::ifstream infile(filename);
     if (!infile.is_open()) {

@@ -15,7 +15,7 @@ fn parse_direction(direction : &str) -> Direction {
   }
 }
 
-pub fn day02functional(filename: &CxxString, part1: &mut u64, part2: &mut u64) {
+pub fn day02functional(filename: &CxxString) -> [u64; 2] {
   let input_puzzle = std::fs::read_to_string(filename.to_str().unwrap())
     .expect("File not found!")
     .lines()
@@ -44,6 +44,6 @@ pub fn day02functional(filename: &CxxString, part1: &mut u64, part2: &mut u64) {
       },
     }
   }
-  *part1 = depth_part1 * position;
-  *part2 = depth_part2 * position;
+
+  [depth_part1 * position, depth_part2 * position]
 }

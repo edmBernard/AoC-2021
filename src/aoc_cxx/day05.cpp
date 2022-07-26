@@ -64,7 +64,7 @@ void increment(uint8_t& elem, uint64_t& count) {
 RegisterCommand day05("day05", {
     { "input_day05.txt",       7380,  21373},
     { "input_day05_test1.txt", 5,     12},
-  }, [](fs::path filename) -> std::tuple<uint64_t, uint64_t> {
+  }, [](fs::path filename) -> std::array<uint64_t, 2> {
 
     std::ifstream infile(filename);
     if (!infile.is_open()) {

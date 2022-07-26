@@ -13,9 +13,9 @@ mod ffi {
 
     // it's an ugly signature but cxx_rust don't support tuple yet.
     // so I can't return result as a tuple that will be use in c++
-    fn day01(filename: &CxxString, part1: &mut u64, part2: &mut u64);
-    fn day01functional(filename: &CxxString, part1: &mut u64, part2: &mut u64);
-    fn day02functional(filename: &CxxString, part1: &mut u64, part2: &mut u64);
-    fn day03functional(filename: &CxxString, part1: &mut u64, part2: &mut u64);
+    fn day01(filename: &CxxString) -> [u64; 2];
+    fn day01functional(filename: &CxxString) -> [u64; 2];
+    fn day02functional(filename: &CxxString) -> [u64; 2];
+    fn day03functional(filename: &CxxString) -> [u64; 2];
   }
 }

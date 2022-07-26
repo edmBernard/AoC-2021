@@ -12,7 +12,7 @@ namespace aoc {
 namespace xs = xsimd;
 namespace fs = std::filesystem;
 
-RegisterCommand day01xsimd("day01,xsimd", {{"day01.txt", 1, 2}}, [](fs::path filename) -> std::tuple<uint64_t, uint64_t> {
+RegisterCommand day01xsimd("day01,xsimd", {{"day01.txt", 1, 2}}, [](fs::path filename) -> std::array<uint64_t, 2> {
   spdlog::debug("filename: {}", filename.string());
 
   std::ifstream infile(filename);

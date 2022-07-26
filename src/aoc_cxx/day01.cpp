@@ -21,7 +21,7 @@ namespace rv = ranges::views;
 RegisterCommand day01("day01", {
     { "input_day01.txt",       1233,  1275},
     { "input_day01_test1.txt", 7,     5},
-  }, [](fs::path filename) -> std::tuple<uint64_t, uint64_t> {
+  }, [](fs::path filename) -> std::array<uint64_t, 2> {
 
     std::ifstream infile(filename);
     if (!infile.is_open()) {
@@ -62,7 +62,7 @@ RegisterCommand day01("day01", {
 RegisterCommand day01simple("day01,simple", {
     { "input_day01.txt",       1233,  1275},
     { "input_day01_test1.txt", 7,     5},
-  }, [](fs::path filename) -> std::tuple<uint64_t, uint64_t> {
+  }, [](fs::path filename) -> std::array<uint64_t, 2> {
 
     std::ifstream infile(filename);
     if (!infile.is_open()) {
@@ -97,7 +97,7 @@ RegisterCommand day01simple("day01,simple", {
 RegisterCommand day01range("day01,range", {
     { "input_day01.txt",       1233,  1275},
     { "input_day01_test1.txt", 7,     5},
-  }, [](fs::path filename) -> std::tuple<uint64_t, uint64_t> {
+  }, [](fs::path filename) -> std::array<uint64_t, 2> {
 
     std::ifstream infile(filename);
     if (!infile.is_open()) {

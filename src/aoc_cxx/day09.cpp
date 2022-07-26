@@ -36,7 +36,7 @@ void showVect(const std::vector<T> &mark) {
 
 
 template <typename T>
-void showBoard(const std::vector<T> &mark, std::tuple<uint64_t, uint64_t> size) {
+void showBoard(const std::vector<T> &mark, std::array<uint64_t, 2> size) {
   const auto [width, height] = size;
   for (size_t row = 0; row < height; ++row) {
     for (size_t col = 0; col < width; ++col) {
@@ -89,7 +89,7 @@ struct Board {
 RegisterCommand day09("day09", {
     { "input_day09.txt",       564, 1038240},
     { "input_day09_test1.txt", 15,  1134},
-  }, [](fs::path filename) -> std::tuple<uint64_t, uint64_t> {
+  }, [](fs::path filename) -> std::array<uint64_t, 2> {
 
     std::ifstream infile(filename);
     if (!infile.is_open()) {

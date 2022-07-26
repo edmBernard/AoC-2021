@@ -17,7 +17,7 @@ fn tree_decent(input: &[u32], line_length : u32, option : bool) -> u32 {
   input_copy[0]
 }
 
-pub fn day03functional(filename: &CxxString, part1: &mut u64, part2: &mut u64) {
+pub fn day03functional(filename: &CxxString) -> [u64; 2] {
 
   let mut line_length = 0;
 
@@ -40,10 +40,12 @@ pub fn day03functional(filename: &CxxString, part1: &mut u64, part2: &mut u64) {
   }
   let epsilon = (1 << line_length) - 1 & !gamma;
 
-  *part1 = (gamma * epsilon) as u64;
+  let part1 = (gamma * epsilon) as u64;
 
   let oxygen = tree_decent(&input_puzzle, line_length, false);
   let co2 = tree_decent(&input_puzzle, line_length, true);
 
-  *part2 = (oxygen * co2) as u64;
+  let part2 = (oxygen * co2) as u64;
+
+  [part1, part2]
 }

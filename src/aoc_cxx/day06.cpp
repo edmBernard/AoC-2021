@@ -100,7 +100,7 @@ private:
 RegisterCommand day06("day06", {
     { "input_day06.txt",       345793,  1572643095893},
     { "input_day06_test1.txt", 5934,    26984457539},
-  }, [](fs::path filename) -> std::tuple<uint64_t, uint64_t> {
+  }, [](fs::path filename) -> std::array<uint64_t, 2> {
 
     std::ifstream infile(filename);
     if (!infile.is_open()) {

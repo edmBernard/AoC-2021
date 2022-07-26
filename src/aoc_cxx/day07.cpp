@@ -58,7 +58,7 @@ uint64_t computePart2(const std::vector<T>& input, T position) {
 RegisterCommand day07("day07", {
     { "input_day07.txt",       340052,  92948968},
     { "input_day07_test1.txt", 37,      168},
-  }, [](fs::path filename) -> std::tuple<uint64_t, uint64_t> {
+  }, [](fs::path filename) -> std::array<uint64_t, 2> {
 
     std::ifstream infile(filename);
     if (!infile.is_open()) {

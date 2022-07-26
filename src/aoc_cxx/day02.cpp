@@ -55,7 +55,7 @@ std::pair<Direction, uint16_t> parseInputLine(std::string_view line) {
 RegisterCommand day02("day02", {
     { "input_day02.txt",       2117664,   2073416724},
     { "input_day02_test1.txt", 150,       900},
-  }, [](fs::path filename) -> std::tuple<uint64_t, uint64_t> {
+  }, [](fs::path filename) -> std::array<uint64_t, 2> {
 
     std::ifstream infile(filename);
     if (!infile.is_open()) {
@@ -99,7 +99,7 @@ RegisterCommand day02("day02", {
 RegisterCommand day02range("day02,range", {
     { "input_day02.txt",       2117664,   2073416724},
     { "input_day02_test1.txt", 150,       900},
-  }, [](fs::path filename) -> std::tuple<uint64_t, uint64_t> {
+  }, [](fs::path filename) -> std::array<uint64_t, 2> {
 
     std::ifstream infile(filename);
     if (!infile.is_open()) {
