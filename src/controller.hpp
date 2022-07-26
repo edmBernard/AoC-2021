@@ -42,7 +42,8 @@ public:
         continue;
       }
 
-      if (expectedResults.empty() || !isDirectory) {
+      // We try to execute a single input file with all matching command
+      if (!isDirectory) {
         auto start_temp = std::chrono::high_resolution_clock::now();
 
         auto [part1, part2] = command(input);
@@ -53,6 +54,7 @@ public:
         continue;
       }
 
+      // We try to execute command and check the result given the file provided in code
       for (auto &[filename, expectedPart1, expectedPart2] : expectedResults) {
         auto start_temp = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < repetition-1; ++i) {
