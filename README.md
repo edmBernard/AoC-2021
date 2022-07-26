@@ -41,24 +41,25 @@ It's a toy project. So if you spot error, improvement comments are welcome.
 On my `Intel(R) Core(TM) i5-4570 CPU @ 3.20GHz`
 
 ```bash
-day01                     in    0.06 ms : part1=1233       part2=1275
+day01                     in    0.10 ms : part1=1233       part2=1275
 day01,simple              in    0.09 ms : part1=1233       part2=1275
-day01,range               in    0.10 ms : part1=1233       part2=1275
+day01,range               in    0.09 ms : part1=1233       part2=1275
 day01,rust                in    0.11 ms : part1=1233       part2=1275
 day01,rust,functional     in    0.05 ms : part1=1233       part2=1275
-day02                     in    0.04 ms : part1=2117664    part2=2073416724
-day02,range               in    0.16 ms : part1=2117664    part2=2073416724
+day02                     in    0.07 ms : part1=2117664    part2=2073416724
+day02,range               in    0.14 ms : part1=2117664    part2=2073416724
 day02,rust,functional     in    0.12 ms : part1=2117664    part2=2073416724
-day03                     in    0.12 ms : part1=3429254    part2=5410338
+day03                     in    0.18 ms : part1=3429254    part2=5410338
 day03,rust,functional     in    0.05 ms : part1=3429254    part2=5410338
-day04                     in    0.35 ms : part1=38913      part2=16836
-day05                     in    0.71 ms : part1=7380       part2=21373
-day06                     in    0.03 ms : part1=345793     part2=1572643095893
+day04                     in    0.37 ms : part1=38913      part2=16836
+day05                     in    0.68 ms : part1=7380       part2=21373
+day06                     in    0.04 ms : part1=345793     part2=1572643095893
 day07                     in    0.03 ms : part1=340052     part2=92948968
-day08                     in    0.61 ms : part1=495        part2=1055164
-day09                     in    0.28 ms : part1=564        part2=1038240
+day08                     in    0.60 ms : part1=495        part2=1055164
+day09                     in    0.29 ms : part1=564        part2=1038240
 day10                     in    0.09 ms : part1=243939     part2=2421222841
-day11                     in    0.32 ms : part1=1719       part2=232
+day11                     in    0.33 ms : part1=1719       part2=232
+day12                     in    7.57 ms : part1=3713       part2=91292
 ```
 
 | Day | Description | Tips |
@@ -74,3 +75,4 @@ day11                     in    0.32 ms : part1=1719       part2=232
 | Day09 | Basin size | Watershed-like algorithm |
 | Day10 | Bracket matching | Use a stack |
 | Day11 | Bioluminescent octopus | - |
+| Day12 | Path in connected graph | - |
