@@ -92,7 +92,7 @@ namespace details {
       }
 
       // use next++ to increment after the string_view creation
-      return std::string_view(input.data() + start, input.data() + next++);
+      return std::string_view(input.data() + start, next++ - start);
     }
 
     size_t start = 0;

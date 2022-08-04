@@ -1,8 +1,5 @@
 #include "controller.hpp"
 
-#include "aoc_rust.h"
-
-#include <range/v3/all.hpp>
 #include <spdlog/spdlog.h>
 
 #include <charconv>
@@ -20,8 +17,6 @@
 namespace aoc {
 
 namespace fs = std::filesystem;
-namespace rs = ranges;
-namespace rv = ranges::views;
 
 namespace {
 

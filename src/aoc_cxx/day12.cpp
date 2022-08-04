@@ -1,8 +1,6 @@
 #include "controller.hpp"
 #include "utils.hpp"
 
-#include "aoc_rust.h"
-
 #include <spdlog/spdlog.h>
 
 #include <charconv>

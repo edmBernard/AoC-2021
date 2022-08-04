@@ -1,8 +1,5 @@
 #include "controller.hpp"
 
-#include "aoc_rust.h"
-
-#include <range/v3/all.hpp>
 #include <spdlog/spdlog.h>
 
 #include <charconv>
@@ -21,8 +18,6 @@
 namespace aoc {
 
 namespace fs = std::filesystem;
-namespace rs = ranges;
-namespace rv = ranges::views;
 
 namespace {
 
@@ -45,7 +40,7 @@ char getComplement(char c) {
     case '>':
       return '<';
     default:
-      throw std::runtime_error("Unkown symbol : " + c);
+      throw std::runtime_error(fmt::format("Unkown symbol : {}", c));
   }
 }
 
@@ -60,7 +55,7 @@ uint64_t getScorePart1(char c) {
     case '>':
       return 25137;
     default:
-      throw std::runtime_error("Unkown symbol : " + c);
+      throw std::runtime_error(fmt::format("Unkown symbol : {}", c));
   }
 }
 
@@ -75,7 +70,7 @@ uint64_t getScorePart2(char c) {
     case '>':
       return 4;
     default:
-      throw std::runtime_error("Unkown symbol : " + c);
+      throw std::runtime_error(fmt::format("Unkown symbol : {}", c));
   }
 }
 
@@ -121,7 +116,7 @@ std::variant<char, uint64_t> checkLine(const std::string& line) {
         stack.pop_back();
         break;
       default:
-        throw std::runtime_error("Unkown symbol : " + c);
+        throw std::runtime_error(fmt::format("Unkown symbol : {}", c));
     }
 
   }

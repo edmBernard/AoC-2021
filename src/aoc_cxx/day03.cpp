@@ -3,7 +3,6 @@
 
 #include "aoc_rust.h"
 
-#include <range/v3/all.hpp>
 #include <spdlog/spdlog.h>
 
 #include <filesystem>
@@ -15,8 +14,6 @@
 namespace aoc {
 
 namespace fs = std::filesystem;
-namespace rs = ranges;
-namespace rv = ranges::views;
 
 namespace {
 uint64_t treeDescent(const std::vector<uint16_t> &inputPuzzle, size_t lineLength, bool option) {
