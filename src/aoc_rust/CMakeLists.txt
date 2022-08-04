@@ -31,7 +31,9 @@ if (MSVC)
   set(EXTRA_LINK_LIBRARY userenv advapi32 ws2_32 shell32 msvcrt)
   # it seem msvcrt don't need the debug version even in debug
   # set(EXTRA_LINK_LIBRARY userenv advapi32 ws2_32 shell32 $<IF:$<OR:$<CONFIG:Debug>,$<CONFIG:>>,msvcrtd,msvcrt>)
-else()
+elseif (APPLE)
+  set(EXTRA_LINK_LIBRARY pthread m dl)
+else ()
   # -Wl,--no-as-needed use to prevent missing unused import like dlsym
   set(EXTRA_LINK_LIBRARY -Wl,--no-as-needed pthread m dl)
 endif()
