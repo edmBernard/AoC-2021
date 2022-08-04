@@ -1,6 +1,5 @@
 #include <controller.hpp>
 
-#include <mimalloc-new-delete.h>
 #include <cxxopts.hpp>
 #include <fmt/color.h>
 #include <fmt/core.h>

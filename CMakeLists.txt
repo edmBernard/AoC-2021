@@ -14,8 +14,6 @@ find_package(fmt CONFIG REQUIRED)
 find_package(xsimd CONFIG REQUIRED)
 find_package(range-v3 CONFIG REQUIRED)
 
-find_package(mimalloc CONFIG REQUIRED)
-
 #**************************************************************************************************
 # Include *****************************************************************************************
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
@@ -35,8 +33,8 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
   # add_compile_options(/utf-8 /Zc:__cplusplus /DUNICODE /D_UNICODE /arch:AVX2 /MD /DEBUG)
   add_compile_options(/Oy /O2 /utf-8 /Zc:__cplusplus /DUNICODE /D_UNICODE /arch:AVX2 /MD)
 else()
-  # add_compile_options(-fPIC -mavx2 -fno-omit-frame-pointer -g)
-  add_compile_options(-O3 -mavx2)
+  # add_compile_options(-fPIC -fno-omit-frame-pointer -g)
+  add_compile_options(-O3)
 endif()
 
 #**************************************************************************************************
@@ -53,7 +51,6 @@ SET(SOURCES
 add_executable(AoC-2021 ${COMMANDS_FILE} ${SOURCES})
 target_link_libraries(AoC-2021
   PRIVATE fmt::fmt-header-only spdlog::spdlog_header_only cxxopts::cxxopts
-  mimalloc-static
   xsimd
   range-v3 range-v3-meta range-v3::meta range-v3-concepts
   aoc::rust
