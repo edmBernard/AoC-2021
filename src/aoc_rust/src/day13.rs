@@ -88,7 +88,6 @@ pub fn day13(filename: &CxxString) -> [u64; 2] {
   }
   let part2 : u64 = sheet_after_fold.iter().filter(|value| **value).count() as u64;
 
-  // The answer is visual
   // for y in 0..dimy {
   //   for x in 0..dimx {
   //     print!("{}", if sheet_after_fold[(x + dimx * y) as usize] { "#" } else { "." });
@@ -96,6 +95,14 @@ pub fn day13(filename: &CxxString) -> [u64; 2] {
   //   println!("");
   // }
   // println!("");
+
+  // The answer is visual
+  //    ###..###...##..#..#.####.###..#....###..
+  //    #..#.#..#.#..#.#.#..#....#..#.#....#..#.
+  //    #..#.#..#.#....##...###..###..#....#..#.
+  //    ###..###..#....#.#..#....#..#.#....###..
+  //    #.#..#....#..#.#.#..#....#..#.#....#.#..
+  //    #..#.#.....##..#..#.#....###..####.#..#.
 
   [part1, part2]
 }

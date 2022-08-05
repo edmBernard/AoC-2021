@@ -76,3 +76,4 @@ day12                     in    7.57 ms : part1=3713       part2=91292
 | Day10 | Bracket matching | Use a stack |
 | Day11 | Bioluminescent octopus | - |
 | Day12 | Path in connected graph | - |
+| Day13 | Visual answer | - |
