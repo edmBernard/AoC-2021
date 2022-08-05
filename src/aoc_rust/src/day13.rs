@@ -3,7 +3,7 @@ use cxx::CxxString;
 use std::fs;
 use std::convert::TryInto;
 
-fn fold(sheet: Vec<bool>, fold_coordinate: [usize; 2], dim: &[usize; 2]) -> (Vec<bool>, [usize; 2]) {
+fn fold(sheet: &Vec<bool>, fold_coordinate: &[usize; 2], dim: &[usize; 2]) -> (Vec<bool>, [usize; 2]) {
 
   let [dimx, dimy] = *dim;
 
@@ -80,11 +80,11 @@ pub fn day13(filename: &CxxString) -> [u64; 2] {
     sheet[x + dimx * y] = true;
   }
 
-  let (mut sheet_after_fold, [mut dimx, mut dimy]) = fold(sheet, fold_coordinates[0], &[dimx, dimy]);
+  let (mut sheet_after_fold, [mut dimx, mut dimy]) = fold(&sheet, &fold_coordinates[0], &[dimx, dimy]);
   let part1 : u64 = sheet_after_fold.iter().filter(|value| **value).count() as u64;
 
   for fold_coordinate in fold_coordinates[1..].iter() {
-    (sheet_after_fold, [dimx, dimy]) = fold(sheet_after_fold, *fold_coordinate, &[dimx, dimy]);
+    (sheet_after_fold, [dimx, dimy]) = fold(&sheet_after_fold, fold_coordinate, &[dimx, dimy]);
   }
   let part2 : u64 = sheet_after_fold.iter().filter(|value| **value).count() as u64;
 

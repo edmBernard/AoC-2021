@@ -19,5 +19,6 @@ mod ffi {
     fn day03functional(filename: &CxxString) -> [u64; 2];
     fn day13(filename: &CxxString) -> [u64; 2];
 
+
   }
 }
