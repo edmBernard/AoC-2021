@@ -76,4 +76,6 @@ day12                     in    7.57 ms : part1=3713       part2=91292
 | Day10 | Bracket matching | Use a stack |
 | Day11 | Bioluminescent octopus | - |
 | Day12 | Path in connected graph | - |
-| Day13 | Visual answer | - |
+| Day13 | Fold of transparent sheet | Visual answer |
+| Day14 | Insert letter in sequence | Part2 not done should be possible to use memoization |
+| Day15 | Find smallest weighted path | Recursive super slow Part2 not done |
