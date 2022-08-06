@@ -94,7 +94,7 @@ uint64_t graphWalk(uint8_t currentNode, const std::vector<uint8_t>& counterSmall
 } // namespace
 
 
-RegisterCommand day12("day12", {
+const RegisterCommand day12("day12", {
     { "input_day12.txt",       3713,  91292},
     { "input_day12_test1.txt", 10,    36},
     { "input_day12_test2.txt", 226,   3509},

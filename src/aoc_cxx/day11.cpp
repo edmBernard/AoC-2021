@@ -85,7 +85,7 @@ struct Board {
 } // namespace
 
 
-RegisterCommand day11("day11", {
+const RegisterCommand day11("day11", {
     { "input_day11.txt",       1719,  232},
     { "input_day11_test1.txt", 1656,  195},
   }, [](fs::path filename) -> std::array<uint64_t, 2> {

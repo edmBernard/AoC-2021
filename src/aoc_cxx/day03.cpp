@@ -36,7 +36,7 @@ uint64_t treeDescent(const std::vector<uint16_t> &inputPuzzle, size_t lineLength
 }
 } // namespace
 
-RegisterCommand day03("day03", {
+const RegisterCommand day03("day03", {
     { "input_day03.txt",       3429254,   5410338},
     { "input_day03_test1.txt", 198,       230},
   }, [](fs::path filename) -> std::array<uint64_t, 2> {
@@ -88,7 +88,7 @@ RegisterCommand day03("day03", {
 });
 
 
-RegisterRustCommand day03rustfunctional("day03,rust,functional", {
+const RegisterRustCommand day03rustfunctional("day03,rust,functional", {
     { "input_day03.txt",       3429254,   5410338},
     { "input_day03_test1.txt", 198,       230},
   }, rust::day03functional);

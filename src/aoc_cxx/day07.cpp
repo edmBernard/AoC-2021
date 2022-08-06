@@ -50,7 +50,7 @@ uint64_t computePart2(const std::vector<T>& input, T position) {
 } // namespace
 
 
-RegisterCommand day07("day07", {
+const RegisterCommand day07("day07", {
     { "input_day07.txt",       340052,  92948968},
     { "input_day07_test1.txt", 37,      168},
   }, [](fs::path filename) -> std::array<uint64_t, 2> {

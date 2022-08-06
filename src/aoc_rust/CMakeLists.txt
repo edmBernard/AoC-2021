@@ -28,9 +28,9 @@ add_library(aoc_rust_cxx STATIC ${CMAKE_CURRENT_BINARY_DIR}/aoc_rust.cpp)
 
 if (MSVC)
   # Library for rustup : https://github.com/rust-lang/rustup/pull/1468
-  set(EXTRA_LINK_LIBRARY userenv advapi32 ws2_32 shell32 msvcrt)
+  # set(EXTRA_LINK_LIBRARY userenv advapi32 ws2_32 shell32 Bcrypt msvcrt)
   # it seem msvcrt don't need the debug version even in debug
-  # set(EXTRA_LINK_LIBRARY userenv advapi32 ws2_32 shell32 $<IF:$<OR:$<CONFIG:Debug>,$<CONFIG:>>,msvcrtd,msvcrt>)
+  set(EXTRA_LINK_LIBRARY userenv advapi32 ws2_32 shell32 Bcrypt $<IF:$<OR:$<CONFIG:Debug>,$<CONFIG:>>,msvcrtd,msvcrt>)
 elseif (APPLE)
   set(EXTRA_LINK_LIBRARY pthread m dl)
 else ()

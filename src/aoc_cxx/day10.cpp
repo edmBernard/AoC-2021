@@ -133,7 +133,7 @@ std::variant<char, uint64_t> checkLine(const std::string& line) {
 } // namespace
 
 
-RegisterCommand day10("day10", {
+const RegisterCommand day10("day10", {
     { "input_day10.txt",       243939, 2421222841},
     { "input_day10_test1.txt", 26397,  288957},
   }, [](fs::path filename) -> std::array<uint64_t, 2> {

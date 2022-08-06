@@ -91,7 +91,7 @@ uint64_t getSum(const std::array<uint16_t, Dim*Dim> &board, std::array<bool, Dim
 
 } // namespace
 
-RegisterCommand day04("day04", {
+const RegisterCommand day04("day04", {
     { "input_day04.txt",       38913,   16836},
     { "input_day04_test1.txt", 4512,    1924},
   }, [](fs::path filename) -> std::array<uint64_t, 2> {

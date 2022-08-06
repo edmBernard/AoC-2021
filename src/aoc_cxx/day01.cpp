@@ -18,7 +18,7 @@ namespace rs = ranges;
 namespace rv = ranges::views;
 
 
-RegisterCommand day01("day01", {
+const RegisterCommand day01("day01", {
     { "input_day01.txt",       1233,  1275},
     { "input_day01_test1.txt", 7,     5},
   }, [](fs::path filename) -> std::array<uint64_t, 2> {
@@ -59,7 +59,7 @@ RegisterCommand day01("day01", {
 });
 
 
-RegisterCommand day01simple("day01,simple", {
+const RegisterCommand day01simple("day01,simple", {
     { "input_day01.txt",       1233,  1275},
     { "input_day01_test1.txt", 7,     5},
   }, [](fs::path filename) -> std::array<uint64_t, 2> {
@@ -94,7 +94,7 @@ RegisterCommand day01simple("day01,simple", {
 });
 
 
-RegisterCommand day01range("day01,range", {
+const RegisterCommand day01range("day01,range", {
     { "input_day01.txt",       1233,  1275},
     { "input_day01_test1.txt", 7,     5},
   }, [](fs::path filename) -> std::array<uint64_t, 2> {
@@ -125,13 +125,13 @@ RegisterCommand day01range("day01,range", {
 });
 
 
-RegisterRustCommand day01rust("day01,rust", {
+const RegisterRustCommand day01rust("day01,rust", {
     { "input_day01.txt",       1233,  1275},
     { "input_day01_test1.txt", 7,     5},
   }, rust::day01);
 
 
-RegisterRustCommand day01rustfunctional("day01,rust,functional", {
+const RegisterRustCommand day01rustfunctional("day01,rust,functional", {
     { "input_day01.txt",       1233,  1275},
     { "input_day01_test1.txt", 7,     5},
   }, rust::day01functional);
